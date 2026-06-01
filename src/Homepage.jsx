@@ -1,8 +1,8 @@
- import React from "react";
+import React from "react";
+import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function Homepage() {
-
   const logout = () => {
     window.location.href = "/";
   };
@@ -11,16 +11,19 @@ function Homepage() {
     <>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-4 py-3">
         <div className="container-fluid">
-
           <div className="d-flex align-items-center">
             <img
               className="logo me-3"
               src="images/tripnest logo.png"
               alt="TripNest Logo"
             />
-            <a className="navbar-brand text-warning fw-bold fs-3" href="#">
+
+            <Link
+              to="/dashboard"
+              className="navbar-brand text-warning fw-bold fs-3 text-decoration-none"
+            >
               TripNest
-            </a>
+            </Link>
           </div>
 
           <button
@@ -37,50 +40,56 @@ function Homepage() {
             id="navbarNav"
           >
             <ul className="navbar-nav gap-4">
-
               <li className="nav-item">
-                <a className="nav-link active text-white fw-semibold" href="#">
+                <Link
+                  to="/dashboard"
+                  className="nav-link active text-white fw-semibold"
+                >
                   Home
-                </a>
+                </Link>
               </li>
 
               <li className="nav-item">
-                <a
+                <Link
+                  to="/packages"
                   className="nav-link text-white fw-semibold"
-                  href="packages.html"
                 >
                   Packages
-                </a>
+                </Link>
               </li>
 
               <li className="nav-item">
-                <a className="nav-link text-white fw-semibold" href="#">
+                <Link
+                  to="/customize"
+                  className="nav-link text-white fw-semibold"
+                >
                   Customize
-                </a>
+                </Link>
               </li>
 
               <li className="nav-item">
-                <a className="nav-link text-white fw-semibold" href="#">
+                <Link
+                  to="/wishlist"
+                  className="nav-link text-white fw-semibold"
+                >
                   Wishlist
-                </a>
+                </Link>
               </li>
 
               <li className="nav-item">
-                <a className="nav-link text-white fw-semibold" href="#">
+                <Link
+                  to="/mybookings"
+                  className="nav-link text-white fw-semibold"
+                >
                   My Bookings
-                </a>
+                </Link>
               </li>
-
             </ul>
           </div>
 
-          <button
-            className="btn btn-warning px-4 fw-semibold"
-            onClick={logout}
-          >
+          <button className="btn btn-warning px-4 fw-semibold" onClick={logout}>
             Logout
           </button>
-
         </div>
       </nav>
 
@@ -93,21 +102,19 @@ function Homepage() {
             unforgettable travel experiences with TripNest.
           </p>
 
-          <a href="packages.html">
+          <Link to="/packages">
             <button className="btn btn-warning px-4 py-2 fw-semibold mt-3">
               Start Exploring
             </button>
-          </a>
+          </Link>
         </div>
       </section>
       <section className="places-section py-5">
         <div className="container">
-
           <h2 className="text-center text-warning fw-bold mb-5">
             Popular Destinations
           </h2>
           <div className="row g-4">
-
             <div className="col-md-4">
               <div className="card place-card">
                 <img
@@ -121,9 +128,7 @@ function Homepage() {
                     Experience the beauty of the Eiffel Tower and romantic
                     streets.
                   </p>
-                  <button className="btn btn-warning">
-                    View Details
-                  </button>
+                  <button className="btn btn-warning">View Details</button>
                 </div>
               </div>
             </div>
