@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "../Assets/Css/Signup.css";
 
 import signupBg from "../Assets/Images/signup.webp";
 import logo from "../Assets/Images/tripnest logo.png";
 
 function Signup() {
+  const navigate = useNavigate();
 
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
@@ -12,12 +14,12 @@ function Signup() {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleSignup = (e) => {
-
     e.preventDefault();
 
     const nameRegex = /^[A-Za-z ]{3,30}$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 
     if (!nameRegex.test(fullname)) {
       alert("Name should contain only letters and spaces");
@@ -30,7 +32,9 @@ function Signup() {
     }
 
     if (!passwordRegex.test(password)) {
-      alert("Password must contain uppercase, lowercase and number");
+      alert(
+        "Password must contain uppercase, lowercase and number"
+      );
       return;
     }
 
@@ -66,8 +70,7 @@ function Signup() {
 
     alert("Signup Successful");
 
-    window.location.href = "/login";
-
+    navigate("/login");
   };
 
   return (
@@ -75,18 +78,16 @@ function Signup() {
       className="signup-container"
       style={{
         backgroundImage: `linear-gradient(
-        rgba(0,0,0,0.6),
-        rgba(0,0,0,0.6)
+          rgba(0,0,0,0.6),
+          rgba(0,0,0,0.6)
         ), url(${signupBg})`,
       }}
     >
       <div className="signup-card">
-
         <div className="text-center">
-
           <img
             src={logo}
-            alt="logo"
+            alt="TripNest Logo"
             className="logo"
           />
 
@@ -95,11 +96,9 @@ function Signup() {
           <p>
             Start your travel journey with TripNest
           </p>
-
         </div>
 
         <form onSubmit={handleSignup}>
-
           <input
             type="text"
             placeholder="Enter Full Name"
@@ -147,18 +146,16 @@ function Signup() {
           <button type="submit">
             Signup
           </button>
-
         </form>
 
         <div className="login-link">
-
           <p>
-            Already have an account?
-            <a href="/login"> Login</a>
+            Already have an account?{" "}
+            <Link to="/login">
+              Login
+            </Link>
           </p>
-
         </div>
-
       </div>
     </div>
   );
