@@ -51,18 +51,9 @@ function Dashboard() {
                 Packages
               </Link>
 
-              <li className="nav-item">
-                <a className="nav-link text-white fw-semibold" href="#">
-                  Wishlist
-                </a>
-              </li>
+             <Link to="/wishlist">Wishlist</Link>
 
-              <li className="nav-item">
-                <a className="nav-link text-white fw-semibold" href="#">
-                  My Bookings
-                </a>
-              </li>
-
+<Link to="/mybookings">Bookings</Link>
               <Link to="/customize">
                 <button className="btn btn-warning">Customize Trip</button>
               </Link>
