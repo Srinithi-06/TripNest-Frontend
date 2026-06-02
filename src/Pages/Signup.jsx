@@ -1,9 +1,5 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "../Assets/Css/Signup.css";
-
-import signupBg from "../Assets/Images/signup.webp";
-import logo from "../Assets/Images/tripnest logo.png";
 
 function Signup() {
   const navigate = useNavigate();
@@ -75,58 +71,77 @@ function Signup() {
 
   return (
     <div
-      className="signup-container"
       style={{
-        backgroundImage: `linear-gradient(
-          rgba(0,0,0,0.6),
-          rgba(0,0,0,0.6)
-        ), url(${signupBg})`,
+        minHeight: "100vh",
+        background: "#000",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
       }}
     >
-      <div className="signup-card">
-        <div className="text-center">
-          <img
-            src={logo}
-            alt="TripNest Logo"
-            className="logo"
-          />
+      <div
+        style={{
+          width: "450px",
+          background: "#111",
+          padding: "40px",
+          borderRadius: "20px",
+          border: "1px solid #f4b400",
+          boxShadow:
+            "0 0 30px rgba(244,180,0,0.25)",
+        }}
+      >
+        <h1
+          style={{
+            color: "#f4b400",
+            textAlign: "center",
+            marginBottom: "10px",
+          }}
+        >
+          TripNest
+        </h1>
 
-          <h2>Create Account</h2>
-
-          <p>
-            Start your travel journey with TripNest
-          </p>
-        </div>
+        <h2
+          style={{
+            color: "#fff",
+            textAlign: "center",
+            marginBottom: "30px",
+          }}
+        >
+          Create Account
+        </h2>
 
         <form onSubmit={handleSignup}>
           <input
             type="text"
-            placeholder="Enter Full Name"
+            placeholder="Full Name"
             value={fullname}
             onChange={(e) =>
               setFullname(e.target.value)
             }
             required
+            style={inputStyle}
           />
 
           <input
             type="email"
-            placeholder="Enter Email"
+            placeholder="Email"
             value={email}
             onChange={(e) =>
               setEmail(e.target.value)
             }
             required
+            style={inputStyle}
           />
 
           <input
             type="password"
-            placeholder="Enter Password"
+            placeholder="Password"
             value={password}
             onChange={(e) =>
               setPassword(e.target.value)
             }
             required
+            style={inputStyle}
           />
 
           <input
@@ -137,28 +152,61 @@ function Signup() {
               setConfirmPassword(e.target.value)
             }
             required
+            style={inputStyle}
           />
 
-          <p className="message">
-            Press the button to enter into the world for exploring happiness.
-          </p>
-
-          <button type="submit">
+          <button
+            type="submit"
+            style={{
+              width: "100%",
+              padding: "15px",
+              border: "none",
+              borderRadius: "10px",
+              background: "#f4b400",
+              color: "#000",
+              fontWeight: "bold",
+              cursor: "pointer",
+              marginTop: "10px",
+            }}
+          >
             Signup
           </button>
         </form>
 
-        <div className="login-link">
-          <p>
-            Already have an account?{" "}
-            <Link to="/login">
-              Login
-            </Link>
-          </p>
+        <div
+          style={{
+            textAlign: "center",
+            marginTop: "20px",
+          }}
+        >
+          <span style={{ color: "#fff" }}>
+            Already have an account?
+          </span>
+
+          <Link
+            to="/login"
+            style={{
+              color: "#f4b400",
+              marginLeft: "8px",
+              textDecoration: "none",
+              fontWeight: "bold",
+            }}
+          >
+            Login
+          </Link>
         </div>
       </div>
     </div>
   );
 }
+
+const inputStyle = {
+  width: "100%",
+  padding: "15px",
+  marginBottom: "15px",
+  borderRadius: "10px",
+  border: "none",
+  outline: "none",
+};
 
 export default Signup;

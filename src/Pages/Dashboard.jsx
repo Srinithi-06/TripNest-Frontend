@@ -1,239 +1,292 @@
 import React from "react";
-import "../Assets/Css/Dashboard.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-import logo from "../Assets/Images/tripnest logo.png";
 import paris from "../Assets/Images/paris.webp";
-import pondicherry from "../Assets/Images/pondicherry.jpg";
 import dubai from "../Assets/Images/dubai.webp";
-import switzerland from "../Assets/Images/switzerland.webp";
 import bali from "../Assets/Images/bali.webp";
+import switzerland from "../Assets/Images/switzerland.webp";
 import goa from "../Assets/Images/goa.webp";
-import dashboardBg from "../Assets/Images/dashboard-bg.jpeg";
+import maldives from "../Assets/Images/maldives.webp";
+import logo from "../Assets/Images/tripnest logo.png";
 
 function Dashboard() {
+  const navigate = useNavigate();
+
   const logout = () => {
     localStorage.removeItem("currentUser");
-    window.location.href = "/";
+    navigate("/");
   };
 
+  const destinations = [
+    {
+      name: "Paris",
+      image: paris,
+      price: "₹1,20,000",
+    },
+    {
+      name: "Dubai",
+      image: dubai,
+      price: "₹1,10,000",
+    },
+    {
+      name: "Bali",
+      image: bali,
+      price: "₹85,000",
+    },
+    {
+      name: "Switzerland",
+      image: switzerland,
+      price: "₹1,50,000",
+    },
+    {
+      name: "Goa",
+      image: goa,
+      price: "₹25,000",
+    },
+    {
+      name: "Maldives",
+      image: maldives,
+      price: "₹95,000",
+    },
+  ];
+
   return (
-    <>
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-4 py-3">
-        <div className="container-fluid">
-          <div className="d-flex align-items-center">
-            <img className="logo me-3" src={logo} alt="TripNest Logo" />
+    <div
+      style={{
+        background: "#000",
+        minHeight: "100vh",
+        color: "white",
+      }}
+    >
+      {/* Navbar */}
 
-            <Link
-              to="/dashboard"
-              className="navbar-brand text-warning fw-bold fs-3 text-decoration-none"
-            >
-              TripNest
-            </Link>
-          </div>
+      <nav
+        style={{
+          background: "#111",
+          padding: "18px 8%",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          borderBottom: "1px solid #f4b400",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+          }}
+        >
+          <img
+            src={logo}
+            alt="logo"
+            style={{
+              width: "60px",
+            }}
+          />
+
+          <h2
+            style={{
+              color: "#f4b400",
+              margin: 0,
+            }}
+          >
+            TripNest
+          </h2>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            gap: "30px",
+            alignItems: "center",
+          }}
+        >
+          <Link
+            to="/dashboard"
+            style={navStyle}
+          >
+            Home
+          </Link>
+
+          <Link
+            to="/packages"
+            style={navStyle}
+          >
+            Packages
+          </Link>
+
+          <Link
+            to="/wishlist"
+            style={navStyle}
+          >
+            Wishlist
+          </Link>
+
+          <Link
+            to="/mybookings"
+            style={navStyle}
+          >
+            Bookings
+          </Link>
+
+          <Link
+            to="/customize"
+            style={navStyle}
+          >
+            Customize
+          </Link>
 
           <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-
-          <div
-            className="collapse navbar-collapse justify-content-center"
-            id="navbarNav"
-          >
-            <ul className="navbar-nav gap-4 align-items-center">
-              <li className="nav-item">
-                <Link
-                  to="/dashboard"
-                  className="nav-link active text-white fw-semibold"
-                >
-                  Home
-                </Link>
-              </li>
-
-              <li className="nav-item">
-                <Link
-                  to="/packages"
-                  className="nav-link text-white fw-semibold"
-                >
-                  Packages
-                </Link>
-              </li>
-
-              <li className="nav-item">
-                <Link
-                  to="/wishlist"
-                  className="nav-link text-white fw-semibold"
-                >
-                  Wishlist
-                </Link>
-              </li>
-
-              <li className="nav-item">
-                <Link
-                  to="/mybookings"
-                  className="nav-link text-white fw-semibold"
-                >
-                  Bookings
-                </Link>
-              </li>
-
-              <li className="nav-item">
-                <Link to="/customize">
-                  <button className="btn btn-warning">
-                    Customize Trip
-                  </button>
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <button
-            className="btn btn-warning px-4 fw-semibold"
             onClick={logout}
+            style={{
+              background: "#f4b400",
+              border: "none",
+              padding: "10px 20px",
+              borderRadius: "10px",
+              fontWeight: "bold",
+              cursor: "pointer",
+            }}
           >
             Logout
           </button>
         </div>
       </nav>
 
+      {/* Hero */}
+
       <section
-        className="welcome-section"
         style={{
-          backgroundImage: `linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),url(${dashboardBg})`,
+          padding: "100px 8%",
+          textAlign: "center",
         }}
       >
-        <div className="container text-center">
-          <h1>Explore Your Dream Destinations</h1>
+        <h1
+          style={{
+            fontSize: "60px",
+            marginBottom: "20px",
+          }}
+        >
+          Explore Your Dream Destinations
+        </h1>
 
-          <p>
-            Discover beautiful places, plan exciting adventures, and enjoy
-            unforgettable travel experiences with TripNest.
-          </p>
-
-          <Link to="/packages">
-            <button className="btn btn-warning px-4 py-2 fw-semibold mt-3">
-              Start Exploring
-            </button>
-          </Link>
-        </div>
-      </section>
-
-      <section className="places-section py-5">
-        <div className="container">
-          <h2 className="text-center text-warning fw-bold mb-5">
-            Popular Destinations
-          </h2>
-
-          <div className="row g-4">
-            <div className="col-md-4">
-              <div className="card place-card">
-                <img src={paris} className="card-img-top" alt="Paris" />
-                <div className="card-body text-center">
-                  <h3>Paris</h3>
-                  <p>
-                    Experience the beauty of the Eiffel Tower and romantic
-                    streets.
-                  </p>
-                  <button className="btn btn-warning">View Details</button>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-md-4">
-              <div className="card place-card">
-                <img
-                  src={pondicherry}
-                  className="card-img-top"
-                  alt="Pondicherry"
-                />
-                <div className="card-body text-center">
-                  <h3>Pondicherry</h3>
-                  <p>
-                    Experience a unique blend of Indian and French cultures.
-                  </p>
-                  <button className="btn btn-warning">View Details</button>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-md-4">
-              <div className="card place-card">
-                <img src={dubai} className="card-img-top" alt="Dubai" />
-                <div className="card-body text-center">
-                  <h3>Dubai</h3>
-                  <p>
-                    Discover modern architecture, luxury shopping and desert
-                    adventures.
-                  </p>
-                  <button className="btn btn-warning">View Details</button>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-md-4">
-              <div className="card place-card">
-                <img
-                  src={switzerland}
-                  className="card-img-top"
-                  alt="Switzerland"
-                />
-                <div className="card-body text-center">
-                  <h3>Switzerland</h3>
-                  <p>
-                    Explore snowy mountains, beautiful lakes and peaceful
-                    landscapes.
-                  </p>
-                  <button className="btn btn-warning">View Details</button>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-md-4">
-              <div className="card place-card">
-                <img src={bali} className="card-img-top" alt="Bali" />
-                <div className="card-body text-center">
-                  <h3>Bali</h3>
-                  <p>
-                    Relax in tropical beaches and enjoy the peaceful island
-                    lifestyle.
-                  </p>
-                  <button className="btn btn-warning">View Details</button>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-md-4">
-              <div className="card place-card">
-                <img src={goa} className="card-img-top" alt="Goa" />
-                <div className="card-body text-center">
-                  <h3>Goa</h3>
-                  <p>
-                    Enjoy beach parties, seafood and vibrant nightlife
-                    experiences.
-                  </p>
-                  <button className="btn btn-warning">View Details</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <footer className="bg-dark text-center text-white py-3">
-        <p className="mb-0">
-          © 2026 TripNest | Designed For Travelers Around The World
+        <p
+          style={{
+            color: "#ccc",
+            fontSize: "20px",
+            maxWidth: "900px",
+            margin: "auto",
+          }}
+        >
+          Discover beautiful places, luxury stays,
+          exciting adventures and unforgettable travel
+          experiences around the world.
         </p>
-      </footer>
-    </>
+
+        <Link to="/packages">
+          <button
+            style={{
+              marginTop: "30px",
+              background: "#f4b400",
+              border: "none",
+              padding: "15px 40px",
+              borderRadius: "50px",
+              fontWeight: "bold",
+              cursor: "pointer",
+            }}
+          >
+            Explore Packages
+          </button>
+        </Link>
+      </section>
+
+      {/* Destinations */}
+
+      <section
+        style={{
+          padding: "50px 8%",
+        }}
+      >
+        <h2
+          style={{
+            textAlign: "center",
+            color: "#f4b400",
+            marginBottom: "50px",
+          }}
+        >
+          Popular Destinations
+        </h2>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns:
+              "repeat(auto-fit,minmax(300px,1fr))",
+            gap: "30px",
+          }}
+        >
+          {destinations.map((item, index) => (
+            <div
+              key={index}
+              style={{
+                background: "#111",
+                borderRadius: "20px",
+                overflow: "hidden",
+                border: "1px solid #222",
+              }}
+            >
+              <img
+                src={item.image}
+                alt={item.name}
+                style={{
+                  width: "100%",
+                  height: "250px",
+                  objectFit: "cover",
+                }}
+              />
+
+              <div
+                style={{
+                  padding: "20px",
+                  textAlign: "center",
+                }}
+              >
+                <h3>{item.name}</h3>
+
+                <p
+                  style={{
+                    color: "#f4b400",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {item.price}
+                </p>
+
+                <button
+                  style={{
+                    background: "#f4b400",
+                    border: "none",
+                    padding: "10px 20px",
+                    borderRadius: "10px",
+                    fontWeight: "bold",
+                    cursor: "pointer",
+                  }}
+                >
+                  View Details
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
   );
 }
+
+const navStyle = {
+  color: "white",
+  textDecoration: "none",
+  fontWeight: "500",
+};
 
 export default Dashboard;

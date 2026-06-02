@@ -1,112 +1,184 @@
-import React, { useState } from "react";
-import "../Assets/Css/Login.css";
-
-import loginBg from "../Assets/Images/login.webp";
-import logo from "../Assets/Images/tripnest logo.png";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 function Login() {
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  useEffect(() => {
+    const currentUser = localStorage.getItem("currentUser");
+    const adminUser = localStorage.getItem("adminUser");
+
+    if (currentUser) {
+      navigate("/dashboard");
+    }
+
+    if (adminUser) {
+      navigate("/admin");
+    }
+  }, [navigate]);
+
   const handleLogin = (e) => {
     e.preventDefault();
-      if (
-  email === "sri@gmail.com" &&
-  password === "Sri@2006"
-) {
 
-  alert("Admin Login Successful");
+    if (
+      email === "sri@gmail.com" &&
+      password === "Sri@2006"
+    ) {
+      localStorage.setItem("adminUser", "true");
 
-  window.location.href = "/admin-dashboard";
+      alert("Admin Login Successful");
 
-  return;
-}
+      navigate("/admin");
+      return;
+    }
+
     const users =
       JSON.parse(localStorage.getItem("tripnestUsers")) || [];
 
-    const foundUser = users.find(
-      (user) =>
-        user.email === email &&
-        user.password === password
+    const user = users.find(
+      (u) =>
+        u.email === email &&
+        u.password === password
     );
 
-    if (foundUser) {
-
+    if (user) {
       localStorage.setItem(
         "currentUser",
-        JSON.stringify(foundUser)
+        JSON.stringify(user)
       );
 
       alert("Login Successful");
 
-      window.location.href = "/dashboard";
-
+      navigate("/dashboard");
     } else {
-
-      alert("Invalid Email Or Password");
-
+      alert("Invalid Email or Password");
     }
   };
 
   return (
     <div
-      className="login-container"
       style={{
-        backgroundImage: `linear-gradient(
-        rgba(0,0,0,0.6),
-        rgba(0,0,0,0.6)
-        ), url(${loginBg})`,
+        minHeight: "100vh",
+        background: "#000",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
       }}
     >
-      <div className="login-box">
+      <div
+        style={{
+          width: "420px",
+          background: "#111",
+          padding: "40px",
+          borderRadius: "20px",
+          border: "1px solid #f4b400",
+          boxShadow:
+            "0 0 30px rgba(244,180,0,0.25)",
+        }}
+      >
+        <h1
+          style={{
+            color: "#f4b400",
+            textAlign: "center",
+            marginBottom: "10px",
+          }}
+        >
+          TripNest
+        </h1>
 
-        <img src={logo} alt="TripNest" />
-
-        <h2>Welcome Back</h2>
-
-        <p>Login to continue your journey</p>
+        <h2
+          style={{
+            color: "#fff",
+            textAlign: "center",
+            marginBottom: "30px",
+          }}
+        >
+          Welcome Back
+        </h2>
 
         <form onSubmit={handleLogin}>
-
           <input
             type="email"
-            placeholder="Enter your email"
+            placeholder="Enter Email"
             value={email}
             onChange={(e) =>
               setEmail(e.target.value)
             }
             required
+            style={{
+              width: "100%",
+              padding: "15px",
+              marginBottom: "20px",
+              borderRadius: "10px",
+              border: "none",
+              outline: "none",
+            }}
           />
 
           <input
             type="password"
-            placeholder="Enter your password"
+            placeholder="Enter Password"
             value={password}
             onChange={(e) =>
               setPassword(e.target.value)
             }
             required
+            style={{
+              width: "100%",
+              padding: "15px",
+              marginBottom: "25px",
+              borderRadius: "10px",
+              border: "none",
+              outline: "none",
+            }}
           />
 
-          <button type="submit">
+          <button
+            type="submit"
+            style={{
+              width: "100%",
+              padding: "15px",
+              border: "none",
+              borderRadius: "10px",
+              background: "#f4b400",
+              color: "#000",
+              fontWeight: "bold",
+              cursor: "pointer",
+              fontSize: "16px",
+            }}
+          >
             Login
           </button>
-
         </form>
 
-        <div className="extra-links">
+        <div
+          style={{
+            marginTop: "20px",
+            textAlign: "center",
+          }}
+        >
+          <p
+            style={{
+              color: "#ccc",
+            }}
+          >
+            Don't have an account?
+          </p>
 
-          <a href="/forgot-password">
-            Forgot Password?
-          </a>
-
-          <a href="/signup">
+          <Link
+            to="/signup"
+            style={{
+              color: "#f4b400",
+              textDecoration: "none",
+              fontWeight: "bold",
+            }}
+          >
             Create Account
-          </a>
-
+          </Link>
         </div>
-
       </div>
     </div>
   );

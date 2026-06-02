@@ -1,128 +1,108 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import "../Assets/Css/Category.css";
-
-import logo from "../Assets/Images/tripnest logo.png";
-import heroBg from "../Assets/Images/adventure background.jpg";
+import CategoryNavbar from "../Components/CategoryNavbar";
+import PackageCard from "../Components/PackageCard";
 
 import ladakh from "../Assets/Images/ladakh.jpg";
 import spiti from "../Assets/Images/spiti.jpg";
 import andaman from "../Assets/Images/andaman.avif";
 
 function Adventure() {
-  return (
-    <><nav className="navbar navbar-expand-lg navbar-dark bg-dark px-3 py-2">
-  <div className="container-fluid">
+const tours = [
+{
+name: "Ladakh",
+image: ladakh,
+duration: "7 Days / 6 Nights",
+price: "₹45,000",
+description:
+"Bike rides through breathtaking mountain passes.",
+},
+{
+name: "Spiti Valley",
+image: spiti,
+duration: "6 Days / 5 Nights",
+price: "₹42,000",
+description:
+"High altitude desert adventure and scenic landscapes.",
+},
+{
+name: "Andaman",
+image: andaman,
+duration: "5 Days / 4 Nights",
+price: "₹38,000",
+description:
+"Scuba diving and exciting water sports activities.",
+},
+];
 
-    <div className="d-flex align-items-center">
-      <img className="logo me-2" src={logo} alt="logo" />
+return (
+<div
+style={{
+background: "#000",
+minHeight: "100vh",
+color: "white",
+}}
+> <CategoryNavbar />
 
-      <Link
-        className="navbar-brand text-warning fw-bold fs-4"
-        to="/dashboard"
-      >
-        TripNest
-      </Link>
-    </div>
-
-    <button
-      className="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarNav"
+```
+  <section
+    style={{
+      padding: "100px 8%",
+      textAlign: "center",
+      background:
+        "linear-gradient(to right,#000,#111)",
+    }}
+  >
+    <h1
+      style={{
+        color: "#f4b400",
+        fontSize: "60px",
+        marginBottom: "20px",
+      }}
     >
-      <span className="navbar-toggler-icon"></span>
-    </button>
+      Adventure Packages
+    </h1>
 
+    <p
+      style={{
+        color: "#ccc",
+        fontSize: "20px",
+        maxWidth: "900px",
+        margin: "auto",
+      }}
+    >
+      Experience thrilling adventures, trekking,
+      biking, rafting and unforgettable journeys.
+    </p>
+  </section>
+
+  <section
+    style={{
+      padding: "60px 8%",
+    }}
+  >
     <div
-      className="collapse navbar-collapse justify-content-center"
-      id="navbarNav"
+      style={{
+        display: "grid",
+        gridTemplateColumns:
+          "repeat(auto-fit,minmax(320px,1fr))",
+        gap: "30px",
+      }}
     >
-      <ul className="navbar-nav gap-4">
-
-        <li className="nav-item">
-          <Link className="nav-link text-white" to="/dashboard">
-            Home
-          </Link>
-        </li>
-
-        <li className="nav-item">
-          <Link className="nav-link text-warning fw-bold" to="/packages">
-            Packages
-          </Link>
-        </li>
-
-        <li className="nav-item">
-          <Link className="nav-link text-white" to="/wishlist">
-            Wishlist
-          </Link>
-        </li>
-
-        <li className="nav-item">
-          <Link className="nav-link text-white" to="/bookings">
-            Bookings
-          </Link>
-        </li>
-
-        <li className="nav-item">
-          <Link className="nav-link text-white" to="/customize">
-            Customize
-          </Link>
-        </li>
-
-      </ul>
+      {tours.map((tour) => (
+        <PackageCard
+          key={tour.name}
+          image={tour.image}
+          name={tour.name}
+          duration={tour.duration}
+          description={tour.description}
+          price={tour.price}
+        />
+      ))}
     </div>
+  </section>
+</div>
 
-  </div>
-</nav>
-
-      <section className="category-nav">
-        <div className="container text-center">
-          <Link className="category-btn" to="/international">International</Link>
-          <Link className="category-btn" to="/family">Family</Link>
-          <Link className="category-btn" to="/friends">Friends</Link>
-          <Link className="category-btn active-btn" to="/adventure">Adventure</Link>
-          <Link className="category-btn" to="/honeymoon">Honeymoon</Link>
-        </div>
-      </section>
-
-      <section
-        className="hero-section"
-        style={{
-          backgroundImage: `linear-gradient(rgba(0,0,0,0.65),rgba(0,0,0,0.65)),url(${heroBg})`
-        }}
-      >
-        <div className="hero-content">
-          <h1>Experience The Thrill</h1>
-          <p>Adventure trips for explorers and thrill seekers.</p>
-        </div>
-      </section>
-
-      <div className="container py-5">
-        <div className="row g-4">
-          <Card image={ladakh} title="Ladakh" price="₹45,000" />
-          <Card image={spiti} title="Spiti Valley" price="₹42,000" />
-          <Card image={andaman} title="Andaman" price="₹38,000" />
-        </div>
-      </div>
-    </>
-  );
-}
-
-function Card({ image, title, price }) {
-  return (
-    <div className="col-md-4">
-      <div className="card package-card">
-        <img src={image} alt={title} />
-        <div className="card-body">
-          <h3>{title}</h3>
-          <p>⭐⭐⭐⭐⭐</p>
-          <h5>{price}</h5>
-          <button className="btn btn-warning w-100">View Details</button>
-        </div>
-      </div>
-    </div>
-  );
+);
 }
 
 export default Adventure;

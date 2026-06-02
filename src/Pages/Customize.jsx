@@ -1,218 +1,168 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import "../Assets/Css/Category.css";
-
-import logo from "../Assets/Images/tripnest logo.png";
-import heroBg from "../Assets/Images/dashboard-bg.jpeg";
 
 function Customize() {
-
-  const [tripData, setTripData] = useState({
+  const [formData, setFormData] = useState({
     destination: "",
-    members: "",
+    travelers: "",
     budget: "",
-    days: "",
-    transport: "",
-    hotel: "",
-    food: ""
+    travelDate: "",
+    requests: "",
   });
 
   const handleChange = (e) => {
-    setTripData({
-      ...tripData,
-      [e.target.name]: e.target.value
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
     });
   };
 
-  const handleSubmit = (e) => {
+  const submitRequest = (e) => {
     e.preventDefault();
 
-    const requests =
-      JSON.parse(localStorage.getItem("tripRequests")) || [];
+    const existingRequests =
+      JSON.parse(
+        localStorage.getItem("customTripRequests")
+      ) || [];
 
-    requests.push(tripData);
+    existingRequests.push(formData);
 
     localStorage.setItem(
-      "tripRequests",
-      JSON.stringify(requests)
+      "customTripRequests",
+      JSON.stringify(existingRequests)
     );
 
-    alert("Trip Request Submitted Successfully");
+    alert(
+      "Your custom trip request has been submitted successfully."
+    );
 
-    setTripData({
+    setFormData({
       destination: "",
-      members: "",
+      travelers: "",
       budget: "",
-      days: "",
-      transport: "",
-      hotel: "",
-      food: ""
+      travelDate: "",
+      requests: "",
     });
   };
 
   return (
-    <>
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-4 py-3">
-        <div className="container-fluid">
-
-          <div className="d-flex align-items-center">
-            <img
-              className="logo me-3"
-              src={logo}
-              alt="logo"
-            />
-
-            <Link
-              className="navbar-brand text-warning fw-bold fs-3"
-              to="/dashboard"
-            >
-              TripNest
-            </Link>
-          </div>
-
-        </div>
-      </nav>
-
-      <section
-        className="hero-section"
+    <div
+      style={{
+        background: "#000",
+        minHeight: "100vh",
+        color: "white",
+        padding: "60px 8%",
+      }}
+    >
+      <h1
         style={{
-          backgroundImage:
-            `linear-gradient(rgba(0,0,0,0.65),
-            rgba(0,0,0,0.65)),
-            url(${heroBg})`
+          textAlign: "center",
+          color: "#f4b400",
+          fontSize: "55px",
+          marginBottom: "20px",
         }}
       >
-        <div className="hero-content">
-          <h1>Customize Your Dream Trip</h1>
+        Customize Your Trip
+      </h1>
 
-          <p>
-            Tell us your requirements and
-            we will create a personalized package.
-          </p>
-        </div>
-      </section>
+      <p
+        style={{
+          textAlign: "center",
+          color: "#ccc",
+          marginBottom: "50px",
+        }}
+      >
+        Tell us your requirements and we'll design
+        your dream vacation.
+      </p>
 
-      <div className="container py-5">
+      <form
+        onSubmit={submitRequest}
+        style={{
+          maxWidth: "800px",
+          margin: "auto",
+          background: "#111",
+          padding: "40px",
+          borderRadius: "20px",
+          border: "1px solid #f4b400",
+        }}
+      >
+        <input
+          type="text"
+          name="destination"
+          placeholder="Preferred Destination"
+          value={formData.destination}
+          onChange={handleChange}
+          required
+          style={inputStyle}
+        />
 
-        <div className="card p-4 shadow">
+        <input
+          type="number"
+          name="travelers"
+          placeholder="Number of Travelers"
+          value={formData.travelers}
+          onChange={handleChange}
+          required
+          style={inputStyle}
+        />
 
-          <h2 className="text-center text-warning mb-4">
-            Trip Requirements
-          </h2>
+        <input
+          type="text"
+          name="budget"
+          placeholder="Budget"
+          value={formData.budget}
+          onChange={handleChange}
+          required
+          style={inputStyle}
+        />
 
-          <form onSubmit={handleSubmit}>
+        <input
+          type="date"
+          name="travelDate"
+          value={formData.travelDate}
+          onChange={handleChange}
+          required
+          style={inputStyle}
+        />
 
-            <div className="mb-3">
-              <label>Destination</label>
+        <textarea
+          name="requests"
+          placeholder="Special Requests"
+          rows="5"
+          value={formData.requests}
+          onChange={handleChange}
+          style={inputStyle}
+        />
 
-              <input
-                type="text"
-                className="form-control"
-                name="destination"
-                value={tripData.destination}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="mb-3">
-              <label>Number Of Members</label>
-
-              <input
-                type="number"
-                className="form-control"
-                name="members"
-                value={tripData.members}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="mb-3">
-              <label>Budget</label>
-
-              <input
-                type="text"
-                className="form-control"
-                name="budget"
-                value={tripData.budget}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="mb-3">
-              <label>Trip Duration</label>
-
-              <input
-                type="text"
-                className="form-control"
-                name="days"
-                value={tripData.days}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="mb-3">
-              <label>Transportation</label>
-
-              <select
-                className="form-control"
-                name="transport"
-                value={tripData.transport}
-                onChange={handleChange}
-              >
-                <option>Bus</option>
-                <option>Train</option>
-                <option>Flight</option>
-              </select>
-            </div>
-
-            <div className="mb-3">
-              <label>Hotel Type</label>
-
-              <select
-                className="form-control"
-                name="hotel"
-                value={tripData.hotel}
-                onChange={handleChange}
-              >
-                <option>3 Star</option>
-                <option>4 Star</option>
-                <option>5 Star</option>
-              </select>
-            </div>
-
-            <div className="mb-3">
-              <label>Food Preference</label>
-
-              <select
-                className="form-control"
-                name="food"
-                value={tripData.food}
-                onChange={handleChange}
-              >
-                <option>Veg</option>
-                <option>Non Veg</option>
-                <option>Both</option>
-              </select>
-            </div>
-
-            <button
-              type="submit"
-              className="btn btn-warning w-100"
-            >
-              Submit Request
-            </button>
-
-          </form>
-
-        </div>
-
-      </div>
-    </>
+        <button
+          type="submit"
+          style={{
+            width: "100%",
+            background: "#f4b400",
+            color: "#000",
+            border: "none",
+            padding: "15px",
+            borderRadius: "10px",
+            fontWeight: "bold",
+            cursor: "pointer",
+            marginTop: "15px",
+          }}
+        >
+          Submit Request
+        </button>
+      </form>
+    </div>
   );
 }
+
+const inputStyle = {
+  width: "100%",
+  padding: "15px",
+  marginBottom: "15px",
+  borderRadius: "10px",
+  border: "1px solid #333",
+  background: "#222",
+  color: "white",
+};
 
 export default Customize;

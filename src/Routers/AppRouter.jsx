@@ -29,6 +29,7 @@ function AppRouter() {
         <Route path="/adventure" element={<Adventure />} />
         <Route path="/honeymoon" element={<Honeymoon />} />
         <Route path="/customize" element={<Customize />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </BrowserRouter>
   );
