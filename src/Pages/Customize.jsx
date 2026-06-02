@@ -17,12 +17,11 @@ const currentUser = JSON.parse(
 localStorage.getItem("currentUser")
 );
 
-```
+
 if (!currentUser) {
   alert("Please Login First");
   navigate("/login");
 }
-```
 
 }, [navigate]);
 
@@ -36,7 +35,7 @@ setFormData({
 const submitRequest = (e) => {
 e.preventDefault();
 
-```
+
 const existingRequests =
   JSON.parse(
     localStorage.getItem("customTripRequests")
@@ -60,7 +59,7 @@ setFormData({
   travelDate: "",
   requests: "",
 });
-```
+
 
 };
 
@@ -83,7 +82,7 @@ marginBottom: "20px",
 >
 Customize Your Trip </h1>
 
-```
+
   <p
     style={{
       textAlign: "center",
