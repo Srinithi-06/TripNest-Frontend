@@ -1,4 +1,6 @@
 **Day 1 - Project Planning & Basic Frontend Structure**
+
+
           Analyzed project requirements.
           Designed website flow and navigation structure.
           Created basic HTML pages:
@@ -9,6 +11,8 @@
           Created responsive navigation bar design.
 
  **Day 2 - HTML & CSS Development****
+
+ 
           Developed Home Page sections:
           Hero Section
           About Section
@@ -23,6 +27,8 @@
           Added static travel package cards.
           
 **Day 3 - JavaScript Functionality**
+
+
           Added navigation functionality.
           Implemented category redirections.
           Added dynamic interactions using JavaScript.
@@ -30,6 +36,8 @@
           Added hover effects and animations.
           
 **Day 4 - React Project Setup**
+
+
           Created React application structure.
           Configured React Router.
           Created reusable components:
@@ -41,6 +49,7 @@
           Contact
           Converted static pages into React components.
           Organized project folders and assets.
+          
 **Day 5 - User Module Development**
 
           Developed Login and Signup pages.
