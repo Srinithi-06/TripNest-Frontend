@@ -35,7 +35,7 @@ function Login() {
     }
 
     const response = await axios.post(
-      "https://tripnest-backend-3.onrender.com",
+      "https://tripnest-backend-3.onrender.com/api/users/login",
       {
         email,
         password,
