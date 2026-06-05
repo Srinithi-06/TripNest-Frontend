@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Signup() {
   const navigate = useNavigate();
@@ -9,66 +10,58 @@ function Signup() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSignup = (e) => {
-    e.preventDefault();
+ const handleSignup = async (e) => {
+  e.preventDefault();
 
-    const nameRegex = /^[A-Za-z ]{3,30}$/;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+  const nameRegex = /^[A-Za-z ]{3,30}$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 
-    if (!nameRegex.test(fullname)) {
-      alert("Name should contain only letters and spaces");
-      return;
-    }
+  if (!nameRegex.test(fullname)) {
+    alert(
+      "Name should contain only letters and spaces"
+    );
+    return;
+  }
 
-    if (!emailRegex.test(email)) {
-      alert("Enter a valid email");
-      return;
-    }
+  if (!emailRegex.test(email)) {
+    alert("Enter a valid email");
+    return;
+  }
 
-    if (!passwordRegex.test(password)) {
-      alert(
-        "Password must contain uppercase, lowercase and number"
-      );
-      return;
-    }
+  if (!passwordRegex.test(password)) {
+    alert(
+      "Password must contain uppercase, lowercase and number"
+    );
+    return;
+  }
 
-    if (password !== confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
+  if (password !== confirmPassword) {
+    alert("Passwords do not match");
+    return;
+  }
 
-    let users =
-      JSON.parse(localStorage.getItem("tripnestUsers")) || [];
-
-    const existingUser = users.find(
-      (user) => user.email === email
+  try {
+    const response = await axios.post(
+      "http://localhost:5000/api/users/signup",
+      {
+        fullname,
+        email,
+        password,
+      }
     );
 
-    if (existingUser) {
-      alert("Email already registered");
-      return;
-    }
-
-    const user = {
-      fullname,
-      email,
-      password,
-    };
-
-    users.push(user);
-
-    localStorage.setItem(
-      "tripnestUsers",
-      JSON.stringify(users)
-    );
-
-    alert("Signup Successful");
+    alert(response.data.message);
 
     navigate("/login");
-  };
-
+  } catch (error) {
+    alert(
+      error.response?.data?.message ||
+      "Signup Failed"
+    );
+  }
+};
   return (
     <div
       style={{

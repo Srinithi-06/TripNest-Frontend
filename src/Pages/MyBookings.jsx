@@ -7,9 +7,7 @@ function MyBookings() {
   const [bookings, setBookings] = useState([]);
 
   useEffect(() => {
-    const currentUser = JSON.parse(
-      localStorage.getItem("currentUser")
-    );
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
     if (!currentUser) {
       alert("Please Login First");
@@ -17,22 +15,34 @@ function MyBookings() {
       return;
     }
 
-    const savedBookings =
-      JSON.parse(localStorage.getItem("bookings")) || [];
+    const allBookings = JSON.parse(localStorage.getItem("bookings")) || [];
 
-    setBookings(savedBookings);
+    const userBookings = allBookings.filter(
+      (item) => item.userEmail === currentUser.email,
+    );
+
+    setBookings(userBookings);
   }, [navigate]);
 
   const cancelBooking = (index) => {
-    const updatedBookings = [...bookings];
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
-    updatedBookings.splice(index, 1);
+    const allBookings = JSON.parse(localStorage.getItem("bookings")) || [];
 
-    setBookings(updatedBookings);
+    const userBookings = allBookings.filter(
+      (item) => item.userEmail === currentUser.email,
+    );
 
-    localStorage.setItem(
-      "bookings",
-      JSON.stringify(updatedBookings)
+    const bookingToRemove = userBookings[index];
+
+    const updatedBookings = allBookings.filter(
+      (item) => item !== bookingToRemove,
+    );
+
+    localStorage.setItem("bookings", JSON.stringify(updatedBookings));
+
+    setBookings(
+      updatedBookings.filter((item) => item.userEmail === currentUser.email),
     );
 
     alert("Booking Cancelled Successfully");
@@ -81,8 +91,7 @@ function MyBookings() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns:
-              "repeat(auto-fit,minmax(320px,1fr))",
+            gridTemplateColumns: "repeat(auto-fit,minmax(320px,1fr))",
             gap: "30px",
           }}
         >
@@ -120,8 +129,7 @@ function MyBookings() {
                 </h3>
 
                 <p>
-                  <strong>Duration:</strong>{" "}
-                  {item.duration}
+                  <strong>Duration:</strong> {item.duration}
                 </p>
 
                 <p>
@@ -132,8 +140,8 @@ function MyBookings() {
                         item.status === "Approved"
                           ? "#28a745"
                           : item.status === "Rejected"
-                          ? "#dc3545"
-                          : "#ffc107",
+                            ? "#dc3545"
+                            : "#ffc107",
                     }}
                   >
                     {item.status || "Pending"}
@@ -146,11 +154,20 @@ function MyBookings() {
                       color: "#dc3545",
                     }}
                   >
-                    <strong>Reason:</strong>{" "}
-                    {item.reason}
+                    <strong>Reason:</strong> {item.reason}
+                  </p>
+                )}
+                {item.guideName && (
+                  <p>
+                    <strong>Guide Name:</strong> {item.guideName}
                   </p>
                 )}
 
+                {item.guidePhone && (
+                  <p>
+                    <strong>Guide Mobile:</strong> {item.guidePhone}
+                  </p>
+                )}
                 <h4
                   style={{
                     color: "#f4b400",
@@ -160,9 +177,7 @@ function MyBookings() {
                 </h4>
 
                 <button
-                  onClick={() =>
-                    cancelBooking(index)
-                  }
+                  onClick={() => cancelBooking(index)}
                   style={{
                     width: "100%",
                     background: "#dc3545",

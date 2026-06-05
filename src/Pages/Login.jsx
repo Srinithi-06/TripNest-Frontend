@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Login() {
   const navigate = useNavigate();
@@ -20,43 +21,48 @@ function Login() {
     }
   }, [navigate]);
 
-  const handleLogin = (e) => {
-    e.preventDefault();
+ const handleLogin = async (e) => {
+  e.preventDefault();
 
+  try {
+    // Admin Login
     if (
       email === "sri@gmail.com" &&
       password === "Sri@2006"
     ) {
-      localStorage.setItem("adminUser", "true");
-
-      alert("Admin Login Successful");
-
       navigate("/admin");
       return;
     }
 
-    const users =
-      JSON.parse(localStorage.getItem("tripnestUsers")) || [];
-
-    const user = users.find(
-      (u) =>
-        u.email === email &&
-        u.password === password
+    const response = await axios.post(
+      "http://localhost:5000/api/users/login",
+      {
+        email,
+        password,
+      }
     );
 
-    if (user) {
-      localStorage.setItem(
-        "currentUser",
-        JSON.stringify(user)
-      );
+    localStorage.setItem(
+      "token",
+      response.data.token
+    );
 
-      alert("Login Successful");
+    localStorage.setItem(
+      "currentUser",
+      JSON.stringify(response.data.user)
+    );
 
-      navigate("/dashboard");
-    } else {
-      alert("Invalid Email or Password");
-    }
-  };
+    alert("Login Successful");
+
+    navigate("/dashboard");
+  } catch (error) {
+    alert(
+      error.response?.data?.message ||
+      "Invalid Email or Password"
+    );
+  }
+};
+
 
   return (
     <div

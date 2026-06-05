@@ -1,13 +1,23 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function AdminDashboard() {
+  const navigate = useNavigate();
+
+  const [activeSection, setActiveSection] =
+    useState("dashboard");
+
   const [bookings, setBookings] = useState([]);
   const [customTrips, setCustomTrips] = useState([]);
   const [packages, setPackages] = useState([]);
   const [users, setUsers] = useState([]);
 
+  const [editingIndex, setEditingIndex] =
+    useState(null);
+
   const [newPackage, setNewPackage] = useState({
     name: "",
+    category: "",
     duration: "",
     price: "",
     description: "",
@@ -19,76 +29,38 @@ function AdminDashboard() {
   }, []);
 
   const loadData = () => {
-    const storedBookings =
-      JSON.parse(localStorage.getItem("bookings")) || [];
-
-    const storedTrips =
-      JSON.parse(localStorage.getItem("customTripRequests")) || [];
-
-    const storedPackages =
-      JSON.parse(localStorage.getItem("packages")) || [];
-
-    const storedUsers =
-      JSON.parse(localStorage.getItem("tripnestUsers")) || [];
-
-    setBookings(storedBookings);
-    setCustomTrips(storedTrips);
-    setPackages(storedPackages);
-    setUsers(storedUsers);
-  };
-
-  const approveBooking = (index) => {
-    const updatedBookings = [...bookings];
-
-    updatedBookings[index].status = "Approved";
-    updatedBookings[index].reason = "";
-
-    localStorage.setItem(
-      "bookings",
-      JSON.stringify(updatedBookings)
+    setBookings(
+      JSON.parse(localStorage.getItem("bookings")) ||
+        []
     );
 
-    setBookings(updatedBookings);
-
-    alert("Booking Approved");
-  };
-
-  const rejectBooking = (index) => {
-    const reason = prompt("Enter rejection reason");
-
-    if (!reason) return;
-
-    const updatedBookings = [...bookings];
-
-    updatedBookings[index].status = "Rejected";
-    updatedBookings[index].reason = reason;
-
-    localStorage.setItem(
-      "bookings",
-      JSON.stringify(updatedBookings)
+    setCustomTrips(
+      JSON.parse(
+        localStorage.getItem("customTripRequests")
+      ) || []
     );
 
-    setBookings(updatedBookings);
-
-    alert("Booking Rejected");
-  };
-
-  const deleteCustomTrip = (index) => {
-    const updatedTrips = [...customTrips];
-
-    updatedTrips.splice(index, 1);
-
-    localStorage.setItem(
-      "customTripRequests",
-      JSON.stringify(updatedTrips)
+    setPackages(
+      JSON.parse(localStorage.getItem("packages")) ||
+        []
     );
 
-    setCustomTrips(updatedTrips);
+    setUsers(
+      JSON.parse(
+        localStorage.getItem("tripnestUsers")
+      ) || []
+    );
+  };
+
+  const logout = () => {
+    localStorage.removeItem("currentUser");
+    navigate("/");
   };
 
   const addPackage = () => {
     if (
       !newPackage.name ||
+      !newPackage.category ||
       !newPackage.duration ||
       !newPackage.price
     ) {
@@ -96,10 +68,17 @@ function AdminDashboard() {
       return;
     }
 
-    const updatedPackages = [
-      ...packages,
-      newPackage,
-    ];
+    let updatedPackages = [...packages];
+
+    if (editingIndex !== null) {
+      updatedPackages[editingIndex] = newPackage;
+
+      alert("Package Updated");
+    } else {
+      updatedPackages.push(newPackage);
+
+      alert("Package Added");
+    }
 
     setPackages(updatedPackages);
 
@@ -110,271 +89,679 @@ function AdminDashboard() {
 
     setNewPackage({
       name: "",
+      category: "",
       duration: "",
       price: "",
       description: "",
       image: "",
     });
 
-    alert("Package Added Successfully");
+    setEditingIndex(null);
   };
 
-  const deletePackage = (index) => {
-    const updatedPackages = [...packages];
+  const editPackage = (index) => {
+    setNewPackage(packages[index]);
 
-    updatedPackages.splice(index, 1);
+    setEditingIndex(index);
 
-    setPackages(updatedPackages);
-
-    localStorage.setItem(
-      "packages",
-      JSON.stringify(updatedPackages)
-    );
+    setActiveSection("packages");
   };
+  const approveBooking = (index) => {
+  const guideName = prompt("Enter Guide Name");
 
-  const deleteUser = (index) => {
-    const updatedUsers = [...users];
+  if (!guideName) return;
 
-    updatedUsers.splice(index, 1);
+  const guidePhone = prompt(
+    "Enter Guide Mobile Number"
+  );
 
-    setUsers(updatedUsers);
+  if (!guidePhone) return;
 
-    localStorage.setItem(
-      "tripnestUsers",
-      JSON.stringify(updatedUsers)
-    );
-  };
+  const updatedBookings = [...bookings];
+
+  updatedBookings[index].status = "Approved";
+  updatedBookings[index].guideName = guideName;
+  updatedBookings[index].guidePhone = guidePhone;
+  updatedBookings[index].reason = "";
+
+  setBookings(updatedBookings);
+
+  localStorage.setItem(
+    "bookings",
+    JSON.stringify(updatedBookings)
+  );
+
+  alert("Booking Approved");
+};
+
+const rejectBooking = (index) => {
+  const reason = prompt(
+    "Enter Rejection Reason"
+  );
+
+  if (!reason) return;
+
+  const updatedBookings = [...bookings];
+
+  updatedBookings[index].status = "Rejected";
+  updatedBookings[index].reason = reason;
+
+  setBookings(updatedBookings);
+
+  localStorage.setItem(
+    "bookings",
+    JSON.stringify(updatedBookings)
+  );
+
+  alert("Booking Rejected");
+};
+
+const deleteCustomTrip = (index) => {
+  const updatedTrips = [...customTrips];
+
+  updatedTrips.splice(index, 1);
+
+  setCustomTrips(updatedTrips);
+
+  localStorage.setItem(
+    "customTripRequests",
+    JSON.stringify(updatedTrips)
+  );
+};
+
+const deleteUser = (index) => {
+  const updatedUsers = [...users];
+
+  updatedUsers.splice(index, 1);
+
+  setUsers(updatedUsers);
+
+  localStorage.setItem(
+    "tripnestUsers",
+    JSON.stringify(updatedUsers)
+  );
+};
+
+const deletePackage = (index) => {
+  if (
+    !window.confirm(
+      "Delete this package?"
+    )
+  )
+    return;
+
+  const updatedPackages = [...packages];
+
+  updatedPackages.splice(index, 1);
+
+  setPackages(updatedPackages);
+
+  localStorage.setItem(
+    "packages",
+    JSON.stringify(updatedPackages)
+  );
+};
 
   return (
     <div
       style={{
+        display: "flex",
         background: "#000",
         minHeight: "100vh",
         color: "white",
-        padding: "40px",
       }}
     >
-      <h1
-        style={{
-          textAlign: "center",
-          color: "#f4b400",
-          marginBottom: "50px",
-        }}
-      >
-        Admin Dashboard
-      </h1>
+      {/* Sidebar */}
 
       <div
         style={{
-          display: "grid",
-          gridTemplateColumns:
-            "repeat(auto-fit,minmax(250px,1fr))",
-          gap: "20px",
-          marginBottom: "50px",
+          width: "280px",
+          background: "#111",
+          padding: "30px 20px",
+          borderRight:
+            "2px solid #f4b400",
         }}
       >
-        <div style={cardStyle}>
-          <h3>Total Bookings</h3>
-          <h1>{bookings.length}</h1>
-        </div>
-
-        <div style={cardStyle}>
-          <h3>Custom Requests</h3>
-          <h1>{customTrips.length}</h1>
-        </div>
-
-        <div style={cardStyle}>
-          <h3>Total Packages</h3>
-          <h1>{packages.length}</h1>
-        </div>
-
-        <div style={cardStyle}>
-          <h3>Registered Users</h3>
-          <h1>{users.length}</h1>
-        </div>
-      </div>
-
-      <h2 style={sectionTitle}>
-        Package Management
-      </h2>
-
-      <div style={formCard}>
-        <input
-          style={inputStyle}
-          placeholder="Package Name"
-          value={newPackage.name}
-          onChange={(e) =>
-            setNewPackage({
-              ...newPackage,
-              name: e.target.value,
-            })
-          }
-        />
-
-        <input
-          style={inputStyle}
-          placeholder="Duration"
-          value={newPackage.duration}
-          onChange={(e) =>
-            setNewPackage({
-              ...newPackage,
-              duration: e.target.value,
-            })
-          }
-        />
-
-        <input
-          style={inputStyle}
-          placeholder="Price"
-          value={newPackage.price}
-          onChange={(e) =>
-            setNewPackage({
-              ...newPackage,
-              price: e.target.value,
-            })
-          }
-        />
-
-        <textarea
-          style={inputStyle}
-          placeholder="Description"
-          value={newPackage.description}
-          onChange={(e) =>
-            setNewPackage({
-              ...newPackage,
-              description: e.target.value,
-            })
-          }
-        />
+        <h1
+          style={{
+            color: "#f4b400",
+            textAlign: "center",
+            marginBottom: "50px",
+          }}
+        >
+          TripNest Admin
+        </h1>
 
         <button
-          style={approveBtn}
-          onClick={addPackage}
+          style={sidebarBtn}
+          onClick={() =>
+            setActiveSection(
+              "dashboard"
+            )
+          }
         >
-          Add Package
+          Dashboard
+        </button>
+
+        <button
+          style={sidebarBtn}
+          onClick={() =>
+            setActiveSection(
+              "packages"
+            )
+          }
+        >
+          Package Management
+        </button>
+
+        <button
+          style={sidebarBtn}
+          onClick={() =>
+            setActiveSection(
+              "bookings"
+            )
+          }
+        >
+          Booking Requests
+        </button>
+
+        <button
+          style={sidebarBtn}
+          onClick={() =>
+            setActiveSection(
+              "customTrips"
+            )
+          }
+        >
+          Custom Trips
+        </button>
+
+        <button
+          style={sidebarBtn}
+          onClick={() =>
+            setActiveSection("users")
+          }
+        >
+          Users
+        </button>
+
+        <button
+          style={{
+            ...sidebarBtn,
+            background: "#dc3545",
+            marginTop: "50px",
+          }}
+          onClick={logout}
+        >
+          Logout
         </button>
       </div>
 
-      {packages.map((pkg, index) => (
-        <div key={index} style={boxStyle}>
-          <h3>{pkg.name}</h3>
-          <p>{pkg.duration}</p>
-          <p>{pkg.price}</p>
+      {/* Main Content */}
 
-          <button
-            style={rejectBtn}
-            onClick={() =>
-              deletePackage(index)
-            }
-          >
-            Delete Package
-          </button>
-        </div>
-      ))}
+      <div
+        style={{
+          flex: 1,
+          padding: "40px",
+          
+        }}
+      >
+        {/* DASHBOARD */}
 
-      <h2 style={sectionTitle}>
-        Booking Requests
-      </h2>
+        {activeSection ===
+          "dashboard" && (
+          <>
+            <h1
+              style={{
+                color: "#f4b400",
+                marginBottom: "40px",
+              }}
+            >
+              Dashboard Overview
+            </h1>
+              
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns:
+                  "repeat(auto-fit,minmax(250px,1fr))",
+                gap: "25px",
+              }}
+            >
+              <div style={cardStyle}>
+                <h3>
+                  Total Packages
+                </h3>
+                <h1>
+                  {packages.length}
+                </h1>
+              </div>
 
-      {bookings.map((booking, index) => (
-        <div key={index} style={boxStyle}>
-          <h3>{booking.name}</h3>
+              <div style={cardStyle}>
+                <h3>
+                  Total Bookings
+                </h3>
+                <h1>
+                  {bookings.length}
+                </h1>
+              </div>
 
-          <p>{booking.price}</p>
+              <div style={cardStyle}>
+                <h3>
+                  Registered Users
+                </h3>
+                <h1>
+                  {users.length}
+                </h1>
+              </div>
 
+              <div style={cardStyle}>
+                <h3>
+                  Custom Requests
+                </h3>
+                <h1>
+                  {
+                    customTrips.length
+                  }
+                </h1>
+              </div>
+            </div>
+          </>
+        )}
+        {/* BOOKING REQUESTS */}
+
+{activeSection === "bookings" && (
+  <>
+    <h1 style={{ color: "#f4b400" }}>
+      Booking Requests
+    </h1>
+
+    {bookings.map((booking, index) => (
+      <div key={index} style={boxStyle}>
+        <h3>{booking.name}</h3>
+
+        <p>
+          Customer: {booking.customerName}
+        </p>
+
+        <p>
+          Email: {booking.customerEmail}
+        </p>
+
+        <p>
+          Price: {booking.price}
+        </p>
+
+        <p>
+          Status: {booking.status}
+        </p>
+
+        {booking.reason && (
           <p>
-            Status:
-            {" "}
-            {booking.status || "Pending"}
+            Reason: {booking.reason}
           </p>
+        )}
 
-          {booking.reason && (
-            <p>
-              Reason:
-              {" "}
-              {booking.reason}
-            </p>
-          )}
+        {booking.guideName && (
+          <p>
+            Guide: {booking.guideName}
+          </p>
+        )}
 
-          {booking.status !== "Approved" && (
-            <button
-              style={approveBtn}
-              onClick={() =>
-                approveBooking(index)
-              }
+        {booking.guidePhone && (
+          <p>
+            Mobile: {booking.guidePhone}
+          </p>
+        )}
+
+        <button
+          style={approveBtn}
+          onClick={() =>
+            approveBooking(index)
+          }
+        >
+          Approve
+        </button>
+
+        <button
+          style={rejectBtn}
+          onClick={() =>
+            rejectBooking(index)
+          }
+        >
+          Reject
+        </button>
+      </div>
+    ))}
+  </>
+)}
+
+{/* CUSTOM TRIPS */}
+
+{activeSection === "customTrips" && (
+  <>
+    <h1 style={{ color: "#f4b400" }}>
+      Custom Trip Requests
+    </h1>
+
+    {customTrips.map((trip, index) => (
+      <div key={index} style={boxStyle}>
+        <h3>{trip.destination}</h3>
+
+        <p>
+          Travelers: {trip.travelers}
+        </p>
+
+        <p>
+          Budget: {trip.budget}
+        </p>
+
+        <p>
+          Date: {trip.travelDate}
+        </p>
+
+        <p>{trip.requests}</p>
+
+        <button
+          style={rejectBtn}
+          onClick={() =>
+            deleteCustomTrip(index)
+          }
+        >
+          Delete
+        </button>
+      </div>
+    ))}
+  </>
+)}
+
+{/* USERS */}
+
+{activeSection === "users" && (
+  <>
+    <h1 style={{ color: "#f4b400" }}>
+      Registered Users
+    </h1>
+
+    {users.map((user, index) => (
+      <div key={index} style={boxStyle}>
+        <h3>{user.fullname}</h3>
+
+        <p>{user.email}</p>
+
+        <button
+          style={rejectBtn}
+          onClick={() =>
+            deleteUser(index)
+          }
+        >
+          Delete User
+        </button>
+      </div>
+    ))}
+  </>
+)}
+
+        {/* PACKAGE MANAGEMENT */}
+
+        {activeSection ===
+          "packages" && (
+          <>
+            <h1
+              style={{
+                color: "#f4b400",
+                marginBottom: "25px",
+              }}
             >
-              Approve
-            </button>
-          )}
+              Package Management
+            </h1>
 
-          {booking.status !== "Rejected" && (
-            <button
-              style={rejectBtn}
-              onClick={() =>
-                rejectBooking(index)
-              }
+            <div
+              style={formCard}
             >
-              Reject
-            </button>
-          )}
-        </div>
-      ))}
+              <input
+                style={
+                  inputStyle
+                }
+                placeholder="Package Name"
+                value={
+                  newPackage.name
+                }
+                onChange={(e) =>
+                  setNewPackage({
+                    ...newPackage,
+                    name:
+                      e.target
+                        .value,
+                  })
+                }
+              />
 
-      <h2 style={sectionTitle}>
-        Custom Trip Requests
-      </h2>
+              <select
+                style={
+                  inputStyle
+                }
+                value={
+                  newPackage.category
+                }
+                onChange={(e) =>
+                  setNewPackage({
+                    ...newPackage,
+                    category:
+                      e.target
+                        .value,
+                  })
+                }
+              >
+                <option value="">
+                  Select Category
+                </option>
 
-      {customTrips.map((trip, index) => (
-        <div key={index} style={boxStyle}>
-          <h3>{trip.destination}</h3>
+                <option>
+                  International
+                </option>
 
-          <p>Travelers: {trip.travelers}</p>
+                <option>
+                  Family
+                </option>
 
-          <p>Budget: {trip.budget}</p>
+                <option>
+                  Friends
+                </option>
 
-          <p>Date: {trip.travelDate}</p>
+                <option>
+                  Adventure
+                </option>
 
-          <p>{trip.requests}</p>
+                <option>
+                  Honeymoon
+                </option>
+              </select>
 
-          <button
-            style={rejectBtn}
-            onClick={() =>
-              deleteCustomTrip(index)
-            }
-          >
-            Delete Request
-          </button>
-        </div>
-      ))}
+              <input
+                style={
+                  inputStyle
+                }
+                placeholder="Duration"
+                value={
+                  newPackage.duration
+                }
+                onChange={(e) =>
+                  setNewPackage({
+                    ...newPackage,
+                    duration:
+                      e.target
+                        .value,
+                  })
+                }
+              />
 
-      <h2 style={sectionTitle}>
-        Registered Users
-      </h2>
+              <input
+                style={
+                  inputStyle
+                }
+                placeholder="Price"
+                value={
+                  newPackage.price
+                }
+                onChange={(e) =>
+                  setNewPackage({
+                    ...newPackage,
+                    price:
+                      e.target
+                        .value,
+                  })
+                }
+              />
 
-      {users.map((user, index) => (
-        <div key={index} style={boxStyle}>
-          <h3>{user.fullname}</h3>
+              <input
+                style={
+                  inputStyle
+                }
+                placeholder="Image URL"
+                value={
+                  newPackage.image
+                }
+                onChange={(e) =>
+                  setNewPackage({
+                    ...newPackage,
+                    image:
+                      e.target
+                        .value,
+                  })
+                }
+              />
 
-          <p>{user.email}</p>
+              <textarea
+                style={
+                  inputStyle
+                }
+                placeholder="Description"
+                value={
+                  newPackage.description
+                }
+                onChange={(e) =>
+                  setNewPackage({
+                    ...newPackage,
+                    description:
+                      e.target
+                        .value,
+                  })
+                }
+              />
 
-          <button
-            style={rejectBtn}
-            onClick={() =>
-              deleteUser(index)
-            }
-          >
-            Delete User
-          </button>
-        </div>
-      ))}
+              <button
+                style={
+                  approveBtn
+                }
+                onClick={
+                  addPackage
+                }
+              >
+                {editingIndex !==
+                null
+                  ? "Update Package"
+                  : "Add Package"}
+              </button>
+            </div>
+
+            <h2
+              style={{
+                color: "#f4b400",
+                marginBottom:
+                  "25px",
+              }}
+            >
+              Package History
+            </h2>
+
+            {packages.map(
+              (
+                pkg,
+                index
+              ) => (
+                <div
+                  key={index}
+                  style={
+                    boxStyle
+                  }
+                >
+                  <h3>
+                    {pkg.name}
+                  </h3>
+
+                  <p>
+                    Category:
+                    {
+                      pkg.category
+                    }
+                  </p>
+
+                  <p>
+                    Duration:
+                    {
+                      pkg.duration
+                    }
+                  </p>
+
+                  <p>
+                    Price:
+                    {
+                      pkg.price
+                    }
+                  </p>
+
+                  <p>
+                    {
+                      pkg.description
+                    }
+                  </p>
+
+                  <button
+                    style={
+                      approveBtn
+                    }
+                    onClick={() =>
+                      editPackage(
+                        index
+                      )
+                    }
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    style={
+                      rejectBtn
+                    }
+                    onClick={() =>
+                      deletePackage(
+                        index
+                      )
+                    }
+                  >
+                    Delete
+                  </button>
+                </div>
+              )
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 }
 
-const sectionTitle = {
-  color: "#f4b400",
-  marginTop: "50px",
-  marginBottom: "20px",
+const sidebarBtn = {
+  width: "100%",
+  padding: "15px",
+  marginBottom: "15px",
+  border: "none",
+  borderRadius: "10px",
+  background: "#222",
+  color: "white",
+  cursor: "pointer",
+  fontSize: "16px",
 };
 
 const cardStyle = {
@@ -385,6 +772,13 @@ const cardStyle = {
   border: "1px solid #f4b400",
 };
 
+const formCard = {
+  background: "#111",
+  padding: "25px",
+  borderRadius: "20px",
+  marginBottom: "40px",
+};
+
 const boxStyle = {
   background: "#111",
   padding: "20px",
@@ -392,17 +786,10 @@ const boxStyle = {
   marginBottom: "15px",
 };
 
-const formCard = {
-  background: "#111",
-  padding: "20px",
-  borderRadius: "15px",
-  marginBottom: "30px",
-};
-
 const inputStyle = {
   width: "100%",
-  marginBottom: "10px",
   padding: "12px",
+  marginBottom: "12px",
   borderRadius: "8px",
   border: "1px solid #333",
   background: "#222",
@@ -415,8 +802,8 @@ const approveBtn = {
   border: "none",
   padding: "10px 20px",
   borderRadius: "8px",
-  marginRight: "10px",
   cursor: "pointer",
+  marginRight: "10px",
 };
 
 const rejectBtn = {

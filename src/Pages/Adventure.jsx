@@ -6,6 +6,7 @@ import ladakh from "../Assets/Images/ladakh.jpg";
 import spiti from "../Assets/Images/spiti.jpg";
 import andaman from "../Assets/Images/andaman.avif";
 
+
 function Adventure() {
 const tours = [
 {
@@ -33,7 +34,13 @@ description:
 "Scuba diving and exciting water sports activities.",
 },
 ];
+const savedPackages =
+  JSON.parse(localStorage.getItem("packages")) || [];
 
+const adventurePackages =
+  savedPackages.filter(
+    (item) => item.category === "Adventure"
+  );
 return (
 <div
 style={{
@@ -81,24 +88,39 @@ color: "white",
     }}
   >
     <div
-      style={{
-        display: "grid",
-        gridTemplateColumns:
-          "repeat(auto-fit,minmax(320px,1fr))",
-        gap: "30px",
-      }}
-    >
-      {tours.map((tour) => (
-        <PackageCard
-          key={tour.name}
-          image={tour.image}
-          name={tour.name}
-          duration={tour.duration}
-          description={tour.description}
-          price={tour.price}
-        />
-      ))}
-    </div>
+  style={{
+    display: "grid",
+    gridTemplateColumns:
+      "repeat(auto-fit,minmax(320px,1fr))",
+    gap: "30px",
+  }}
+>
+  {/* Default Packages */}
+
+  {tours.map((tour) => (
+    <PackageCard
+      key={tour.name}
+      image={tour.image}
+      name={tour.name}
+      duration={tour.duration}
+      description={tour.description}
+      price={tour.price}
+    />
+  ))}
+
+  {/* Admin Added Adventure Packages */}
+
+  {adventurePackages.map((tour, index) => (
+    <PackageCard
+      key={`adventure-${index}`}
+      image={tour.image}
+      name={tour.name}
+      duration={tour.duration}
+      description={tour.description}
+      price={tour.price}
+    />
+  ))}
+</div>
   </section>
 </div>
 

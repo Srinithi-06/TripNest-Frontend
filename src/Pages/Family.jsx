@@ -60,6 +60,13 @@ description:
 "Historic palaces and rich cultural heritage.",
 },
 ];
+const savedPackages =
+  JSON.parse(localStorage.getItem("packages")) || [];
+
+const familyPackages =
+  savedPackages.filter(
+    (item) => item.category === "Family"
+  );
 
 return (
 <div
@@ -70,7 +77,7 @@ color: "white",
 }}
 > <CategoryNavbar />
 
-```
+
   <section
     style={{
       padding: "100px 8%",
@@ -106,25 +113,40 @@ color: "white",
       padding: "60px 8%",
     }}
   >
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns:
-          "repeat(auto-fit,minmax(320px,1fr))",
-        gap: "30px",
-      }}
-    >
-      {tours.map((tour) => (
-        <PackageCard
-          key={tour.name}
-          image={tour.image}
-          name={tour.name}
-          duration={tour.duration}
-          description={tour.description}
-          price={tour.price}
-        />
-      ))}
-    </div>
+   <div
+  style={{
+    display: "grid",
+    gridTemplateColumns:
+      "repeat(auto-fit,minmax(320px,1fr))",
+    gap: "30px",
+  }}
+>
+  {/* Default Packages */}
+
+  {tours.map((tour) => (
+    <PackageCard
+      key={tour.name}
+      image={tour.image}
+      name={tour.name}
+      duration={tour.duration}
+      description={tour.description}
+      price={tour.price}
+    />
+  ))}
+
+  {/* Admin Added Family Packages */}
+
+  {familyPackages.map((tour, index) => (
+    <PackageCard
+      key={`family-${index}`}
+      image={tour.image}
+      name={tour.name}
+      duration={tour.duration}
+      description={tour.description}
+      price={tour.price}
+    />
+  ))}
+</div>
   </section>
 </div>
 

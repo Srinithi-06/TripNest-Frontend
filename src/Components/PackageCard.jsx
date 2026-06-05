@@ -22,9 +22,11 @@ function PackageCard({
     const wishlist =
       JSON.parse(localStorage.getItem("wishlist")) || [];
 
-    const exists = wishlist.find(
-      (item) => item.name === name
-    );
+   const exists = wishlist.find(
+  (item) =>
+    item.name === name &&
+    item.userEmail === currentUser.email
+);
 
     if (exists) {
       alert("Already in Wishlist");
@@ -32,13 +34,13 @@ function PackageCard({
     }
 
     wishlist.push({
-      image,
-      name,
-      duration,
-      description,
-      price,
-    });
-
+  userEmail: currentUser.email,
+  image,
+  name,
+  duration,
+  description,
+  price,
+});
     localStorage.setItem(
       "wishlist",
       JSON.stringify(wishlist)
@@ -61,14 +63,21 @@ function PackageCard({
     const bookings =
       JSON.parse(localStorage.getItem("bookings")) || [];
 
-    bookings.push({
-      image,
-      name,
-      duration,
-      description,
-      price,
-      status: "Pending",
-    });
+      bookings.push({
+  userEmail: currentUser.email,
+  customerName: currentUser.fullname,
+  customerEmail: currentUser.email,
+  image,
+  name,
+  duration,
+  description,
+  price,
+  status: "Pending",
+  guideName: "",
+  guidePhone: "",
+  reason: "",
+});
+
 
     localStorage.setItem(
       "bookings",

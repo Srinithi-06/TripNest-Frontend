@@ -6,36 +6,59 @@ function Wishlist() {
 
   const [wishlist, setWishlist] = useState([]);
 
-  useEffect(() => {
-    const currentUser = JSON.parse(
-      localStorage.getItem("currentUser")
-    );
+useEffect(() => {
+  const currentUser = JSON.parse(
+    localStorage.getItem("currentUser")
+  );
 
-    if (!currentUser) {
-      alert("Please Login First");
-      navigate("/login");
-      return;
-    }
+  if (!currentUser) {
+    alert("Please Login First");
+    navigate("/login");
+    return;
+  }
 
-    const savedWishlist =
-      JSON.parse(localStorage.getItem("wishlist")) || [];
+  const allWishlist =
+    JSON.parse(localStorage.getItem("wishlist")) || [];
 
-    setWishlist(savedWishlist);
-  }, [navigate]);
+  const userWishlist = allWishlist.filter(
+    (item) =>
+      item.userEmail === currentUser.email
+  );
 
-  const removeItem = (index) => {
-    const updatedWishlist = [...wishlist];
+  setWishlist(userWishlist);
+}, [navigate]);
 
-    updatedWishlist.splice(index, 1);
+const removeItem = (index) => {
+  const currentUser = JSON.parse(
+    localStorage.getItem("currentUser")
+  );
 
-    setWishlist(updatedWishlist);
+  const allWishlist =
+    JSON.parse(localStorage.getItem("wishlist")) || [];
 
-    localStorage.setItem(
-      "wishlist",
-      JSON.stringify(updatedWishlist)
-    );
-  };
+  const userWishlist = allWishlist.filter(
+    (item) =>
+      item.userEmail === currentUser.email
+  );
 
+  const itemToRemove = userWishlist[index];
+
+  const updatedWishlist = allWishlist.filter(
+    (item) => item !== itemToRemove
+  );
+
+  localStorage.setItem(
+    "wishlist",
+    JSON.stringify(updatedWishlist)
+  );
+
+  setWishlist(
+    updatedWishlist.filter(
+      (item) =>
+        item.userEmail === currentUser.email
+    )
+  );
+};
   return (
     <div
       style={{

@@ -1,8 +1,17 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import CategoryNavbar from "../Components/CategoryNavbar";
 
 function Packages() {
+  const [packages, setPackages] = useState([]);
+
+  useEffect(() => {
+    const savedPackages =
+      JSON.parse(localStorage.getItem("packages")) || [];
+
+    setPackages(savedPackages);
+  }, []);
+
   const categories = [
     {
       name: "International Tours",
@@ -46,6 +55,7 @@ function Packages() {
       }}
     >
       <CategoryNavbar />
+
       <h1
         style={{
           textAlign: "center",
@@ -69,15 +79,17 @@ function Packages() {
         Choose your favorite category and start planning your dream vacation.
       </p>
 
+      {/* Category Cards */}
+
       <div
         style={{
           display: "grid",
           gridTemplateColumns:
             "repeat(auto-fit,minmax(320px,1fr))",
           gap: "30px",
+          marginBottom: "80px",
         }}
       >
-         
         {categories.map((item, index) => (
           <div
             key={index}
@@ -87,6 +99,7 @@ function Packages() {
               padding: "35px",
               border: "1px solid #f4b400",
               textAlign: "center",
+              transition: "0.3s",
             }}
           >
             <div
@@ -133,6 +146,90 @@ function Packages() {
           </div>
         ))}
       </div>
+
+      {/* Admin Added Packages */}
+
+      {packages.length > 0 && (
+        <>
+          <h2
+            style={{
+              textAlign: "center",
+              color: "#f4b400",
+              marginBottom: "40px",
+              fontSize: "40px",
+            }}
+          >
+            Newly Added Packages
+          </h2>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns:
+                "repeat(auto-fit,minmax(300px,1fr))",
+              gap: "30px",
+            }}
+          >
+            {packages.map((pkg, index) => (
+              <div
+                key={index}
+                style={{
+                  background: "#111",
+                  borderRadius: "20px",
+                  overflow: "hidden",
+                  border: "1px solid #333",
+                }}
+              >
+                {pkg.image && (
+                  <img
+                    src={pkg.image}
+                    alt={pkg.name}
+                    style={{
+                      width: "100%",
+                      height: "220px",
+                      objectFit: "cover",
+                    }}
+                  />
+                )}
+
+                <div
+                  style={{
+                    padding: "20px",
+                  }}
+                >
+                  <h3
+                    style={{
+                      color: "#f4b400",
+                    }}
+                  >
+                    {pkg.name}
+                  </h3>
+
+                  <p>
+                    <strong>Category:</strong>{" "}
+                    {pkg.category}
+                  </p>
+
+                  <p>
+                    <strong>Duration:</strong>{" "}
+                    {pkg.duration}
+                  </p>
+
+                  <p>{pkg.description}</p>
+
+                  <h4
+                    style={{
+                      color: "#f4b400",
+                    }}
+                  >
+                    {pkg.price}
+                  </h4>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }

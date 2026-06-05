@@ -9,6 +9,7 @@ import maldives from "../Assets/Images/maldives.webp";
 import bali from "../Assets/Images/bali.webp";
 import singapore from "../Assets/Images/singapore.jpg";
 
+
 function International() {
 const tours = [
 {
@@ -60,6 +61,13 @@ description:
 "Modern attractions and stunning city views.",
 },
 ];
+const savedPackages =
+  JSON.parse(localStorage.getItem("packages")) || [];
+
+const internationalPackages =
+  savedPackages.filter(
+    (item) => item.category === "International"
+  );
 
 return (
 <div
@@ -108,24 +116,39 @@ color: "white",
     }}
   >
     <div
-      style={{
-        display: "grid",
-        gridTemplateColumns:
-          "repeat(auto-fit,minmax(320px,1fr))",
-        gap: "30px",
-      }}
-    >
-      {tours.map((tour) => (
-        <PackageCard
-          key={tour.name}
-          image={tour.image}
-          name={tour.name}
-          duration={tour.duration}
-          description={tour.description}
-          price={tour.price}
-        />
-      ))}
-    </div>
+  style={{
+    display: "grid",
+    gridTemplateColumns:
+      "repeat(auto-fit,minmax(320px,1fr))",
+    gap: "30px",
+  }}
+>
+  {/* Default Packages */}
+
+  {tours.map((tour) => (
+    <PackageCard
+      key={tour.name}
+      image={tour.image}
+      name={tour.name}
+      duration={tour.duration}
+      description={tour.description}
+      price={tour.price}
+    />
+  ))}
+
+  {/* Admin Added International Packages */}
+
+  {internationalPackages.map((tour, index) => (
+    <PackageCard
+      key={`international-${index}`}
+      image={tour.image}
+      name={tour.name}
+      duration={tour.duration}
+      description={tour.description}
+      price={tour.price}
+    />
+  ))}
+</div>
   </section>
 </div>
 

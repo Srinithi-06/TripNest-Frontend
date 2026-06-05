@@ -9,6 +9,7 @@ import manali from "../Assets/Images/Manali.jpg";
 import kasol from "../Assets/Images/kasoli.jpg";
 import rishikesh from "../Assets/Images/rishikesh.jpg";
 
+
 function Friends() {
 const tours = [
 {
@@ -54,6 +55,13 @@ price: "₹22,000",
 description: "River rafting and adventure activities.",
 },
 ];
+const savedPackages =
+  JSON.parse(localStorage.getItem("packages")) || [];
+
+const friendsPackages =
+  savedPackages.filter(
+    (item) => item.category === "Friends"
+  );
 
 return (
 <div
@@ -100,25 +108,40 @@ color: "white",
       padding: "60px 8%",
     }}
   >
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns:
-          "repeat(auto-fit,minmax(320px,1fr))",
-        gap: "30px",
-      }}
-    >
-      {tours.map((tour) => (
-        <PackageCard
-          key={tour.name}
-          image={tour.image}
-          name={tour.name}
-          duration={tour.duration}
-          description={tour.description}
-          price={tour.price}
-        />
-      ))}
-    </div>
+   <div
+  style={{
+    display: "grid",
+    gridTemplateColumns:
+      "repeat(auto-fit,minmax(320px,1fr))",
+    gap: "30px",
+  }}
+>
+  {/* Default Packages */}
+
+  {tours.map((tour) => (
+    <PackageCard
+      key={tour.name}
+      image={tour.image}
+      name={tour.name}
+      duration={tour.duration}
+      description={tour.description}
+      price={tour.price}
+    />
+  ))}
+
+  {/* Admin Added Friends Packages */}
+
+  {friendsPackages.map((tour, index) => (
+    <PackageCard
+      key={`friends-${index}`}
+      image={tour.image}
+      name={tour.name}
+      duration={tour.duration}
+      description={tour.description}
+      price={tour.price}
+    />
+  ))}
+</div>
   </section>
 </div>
 
