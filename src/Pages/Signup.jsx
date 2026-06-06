@@ -11,41 +11,14 @@ function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
+const [loading, setLoading] = useState(false);
  const handleSignup = async (e) => {
   e.preventDefault();
 
-  const nameRegex = /^[A-Za-z ]{3,30}$/;
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const passwordRegex =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
-
-  if (!nameRegex.test(fullname)) {
-    alert(
-      "Name should contain only letters and spaces"
-    );
-    return;
-  }
-
-  if (!emailRegex.test(email)) {
-    alert("Enter a valid email");
-    return;
-  }
-
-  if (!passwordRegex.test(password)) {
-    alert(
-      "Password must contain uppercase, lowercase and number"
-    );
-    return;
-  }
-
-  if (password !== confirmPassword) {
-    alert("Passwords do not match");
-    return;
-  }
+  setLoading(true);
 
   try {
-    const response = await axios.post(
+    await axios.post(
       "https://tripnest-backend-3.onrender.com/api/users/signup",
       {
         fullname,
@@ -54,14 +27,15 @@ function Signup() {
       }
     );
 
-    alert(response.data.message);
-
+    alert("Account Created Successfully");
     navigate("/login");
   } catch (error) {
     alert(
       error.response?.data?.message ||
       "Signup Failed"
     );
+  } finally {
+    setLoading(false);
   }
 };
   return (
@@ -179,23 +153,42 @@ function Signup() {
             style={inputStyle}
           />
 
-          <button
-            type="submit"
-            style={{
-              width: "100%",
-              padding: "15px",
-              border: "none",
-              borderRadius: "10px",
-              background: "#f4b400",
-              color: "#000",
-              fontWeight: "bold",
-              cursor: "pointer",
-              marginTop: "10px",
-            }}
-          >
-            Signup
-          </button>
+         <button
+  type="submit"
+  disabled={loading}
+  style={{
+    width: "100%",
+    padding: "15px",
+    border: "none",
+    borderRadius: "10px",
+    background: loading
+      ? "#888"
+      : "#f4b400",
+    color: "#000",
+    fontWeight: "bold",
+    cursor: loading
+      ? "not-allowed"
+      : "pointer",
+    fontSize: "16px",
+    transition: "0.3s",
+  }}
+>
+  {loading
+    ? "Creating Account..."
+    : "Create Account"}
+</button>
         </form>
+        {loading && (
+  <p
+    style={{
+      color: "#f4b400",
+      textAlign: "center",
+      marginTop: "15px",
+    }}
+  >
+    Creating your account...
+  </p>
+)}
 
         <div
           style={{

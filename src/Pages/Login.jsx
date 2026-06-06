@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Link,
-  useNavigate,
-} from "react-router-dom";
+import {  Link, useNavigate,} from "react-router-dom";
 import axios from "axios";
 
 
@@ -11,7 +8,7 @@ function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+const [loading, setLoading] = useState(false);
   useEffect(() => {
     const currentUser = localStorage.getItem("currentUser");
     const adminUser = localStorage.getItem("adminUser");
@@ -25,8 +22,10 @@ function Login() {
     }
   }, [navigate]);
 
- const handleLogin = async (e) => {
+const handleLogin = async (e) => {
   e.preventDefault();
+
+  setLoading(true);
 
   try {
     // Admin Login
@@ -34,6 +33,15 @@ function Login() {
       email === "sri@gmail.com" &&
       password === "Sri@2006"
     ) {
+      localStorage.setItem(
+        "adminUser",
+        JSON.stringify({
+          email: "sri@gmail.com",
+        })
+      );
+
+      alert("Admin Login Successful");
+
       navigate("/admin");
       return;
     }
@@ -62,8 +70,10 @@ function Login() {
   } catch (error) {
     alert(
       error.response?.data?.message ||
-      "Invalid Email or Password"
+        "Invalid Email or Password"
     );
+  } finally {
+    setLoading(false);
   }
 };
 
@@ -175,22 +185,30 @@ function Login() {
             }}
           />
 
-          <button
-            type="submit"
-            style={{
-              width: "100%",
-              padding: "15px",
-              border: "none",
-              borderRadius: "10px",
-              background: "#f4b400",
-              color: "#000",
-              fontWeight: "bold",
-              cursor: "pointer",
-              fontSize: "16px",
-            }}
-          >
-            Login
-          </button>
+      <button
+  type="submit"
+  disabled={loading}
+  style={{
+    width: "100%",
+    padding: "15px",
+    border: "none",
+    borderRadius: "10px",
+    background: loading
+      ? "#888"
+      : "#f4b400",
+    color: "#000",
+    fontWeight: "bold",
+    cursor: loading
+      ? "not-allowed"
+      : "pointer",
+    fontSize: "16px",
+    transition: "0.3s",
+  }}
+>
+  {loading
+    ? "Logging In..."
+    : "Login"}
+</button>
         </form>
 
         <div

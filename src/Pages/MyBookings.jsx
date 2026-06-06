@@ -55,10 +55,11 @@ function MyBookings() {
         background: "#000",
         minHeight: "100vh",
         color: "white",
-        padding: "60px 8%",
+     
       }}
     >
       <CategoryNavbar />
+     
       <h1
         style={{
           textAlign: "center",
@@ -93,20 +94,24 @@ function MyBookings() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit,minmax(320px,1fr))",
+gridTemplateColumns:
+"repeat(auto-fit,minmax(350px,1fr))",
             gap: "30px",
           }}
         >
           {bookings.map((item, index) => (
-            <div
-              key={index}
-              style={{
-                background: "#111",
-                borderRadius: "20px",
-                overflow: "hidden",
-                border: "1px solid #222",
-              }}
-            >
+     <div
+  key={index}
+  style={{
+    background: "#111",
+    borderRadius: "20px",
+    overflow: "hidden",
+    border: "1px solid #222",
+    display: "flex",
+    flexDirection: "column",
+    height: "100%",
+  }}
+>
               <img
                 src={item.image}
                 alt={item.name}
@@ -135,21 +140,75 @@ function MyBookings() {
                 </p>
 
                 <p>
-                  <strong>Status:</strong>{" "}
-                  <span
-                    style={{
-                      color:
-                        item.status === "Approved"
-                          ? "#28a745"
-                          : item.status === "Rejected"
-                            ? "#dc3545"
-                            : "#ffc107",
-                    }}
-                  >
-                    {item.status || "Pending"}
-                  </span>
-                </p>
+                 <div
+  style={{
+    background:
+      item.status === "Approved"
+        ? "#0f3d1f"
+        : item.status === "Rejected"
+        ? "#4d1111"
+        : "#3d330f",
 
+    border:
+      item.status === "Approved"
+        ? "1px solid #28a745"
+        : item.status === "Rejected"
+        ? "1px solid #dc3545"
+        : "1px solid #ffc107",
+
+    padding: "12px",
+    borderRadius: "10px",
+    marginBottom: "15px",
+  }}
+>
+  <strong>Status:</strong>{" "}
+  <span
+    style={{
+      color:
+        item.status === "Approved"
+          ? "#28a745"
+          : item.status === "Rejected"
+          ? "#dc3545"
+          : "#ffc107",
+      fontWeight: "bold",
+    }}
+  >
+    {item.status || "Pending"}
+  </span>
+</div>
+                </p>
+{item.status === "Approved" && (
+  <div
+    style={{
+      background: "#102b18",
+      border: "1px solid #28a745",
+      padding: "15px",
+      borderRadius: "10px",
+      marginBottom: "15px",
+    }}
+  >
+    <p>
+      <strong>Guide Name:</strong>{" "}
+      {item.guideName}
+    </p>
+
+    <p>
+      <strong>Guide Mobile:</strong>{" "}
+      {item.guidePhone}
+    </p>
+
+    <p
+      style={{
+        color: "#90ee90",
+        marginTop: "10px",
+        fontWeight: "bold",
+      }}
+    >
+      ✓ You can contact the guide directly
+      for further queries.
+    </p>
+  </div>
+)}
                 {item.reason && (
                   <p
                     style={{
@@ -178,21 +237,56 @@ function MyBookings() {
                   {item.price}
                 </h4>
 
-                <button
-                  onClick={() => cancelBooking(index)}
-                  style={{
-                    width: "100%",
-                    background: "#dc3545",
-                    color: "white",
-                    border: "none",
-                    padding: "12px",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                    marginTop: "15px",
-                  }}
-                >
-                  Cancel Booking
-                </button>
+              {item.status === "Approved" ? (
+  <button
+    style={{
+      width: "100%",
+      background: "#28a745",
+      color: "white",
+      border: "none",
+      padding: "12px",
+      borderRadius: "10px",
+      marginTop: "15px",
+      fontWeight: "bold",
+      cursor: "default",
+    }}
+  >
+    ✓ Booking Approved
+  </button>
+) : item.status === "Rejected" ? (
+  <button
+    style={{
+      width: "100%",
+      background: "#dc3545",
+      color: "white",
+      border: "none",
+      padding: "12px",
+      borderRadius: "10px",
+      marginTop: "15px",
+      fontWeight: "bold",
+      cursor: "default",
+    }}
+  >
+    ✕ Booking Rejected
+  </button>
+) : (
+  <button
+    onClick={() => cancelBooking(index)}
+    style={{
+      width: "100%",
+      background: "#f4b400",
+      color: "#000",
+      border: "none",
+      padding: "12px",
+      borderRadius: "10px",
+      cursor: "pointer",
+      marginTop: "15px",
+      fontWeight: "bold",
+    }}
+  >
+    Cancel Booking
+  </button>
+)}
               </div>
             </div>
           ))}

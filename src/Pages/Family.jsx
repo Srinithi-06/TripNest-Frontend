@@ -228,23 +228,6 @@ function Family() {
   );
 }
 
-const statCard = {
-  background: "#111",
-  padding: "30px",
-  borderRadius: "20px",
-  border:
-    "1px solid rgba(244,180,0,0.15)",
-};
 
-const statNumber = {
-  color: "#f4b400",
-  fontSize: "50px",
-  marginBottom: "10px",
-};
-
-const statText = {
-  color: "#ccc",
-  fontSize: "18px",
-};
 
 export default Family;

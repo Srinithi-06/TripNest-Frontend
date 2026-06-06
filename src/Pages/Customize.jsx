@@ -70,7 +70,7 @@ style={{
 background: "#000",
 minHeight: "100vh",
 color: "white",
-padding: "60px 8%",
+/*padding: "60px 8%",*/
 }}
 >
   <CategoryNavbar />
@@ -80,10 +80,15 @@ textAlign: "center",
 color: "#f4b400",
 fontSize: "55px",
 marginBottom: "20px",
+
 }}
 >
 Customize Your Trip </h1>
-
+<div
+  style={{
+    padding: "60px 8%",
+  }}
+></div>
 
   <p
     style={{

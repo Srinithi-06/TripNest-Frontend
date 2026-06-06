@@ -4,7 +4,6 @@ import Home from "./Pages/Home";
 import Login from "./Pages/Login";
 import Signup from "./Pages/Signup";
 import Dashboard from "./Pages/Dashboard";
-import AdminDashboard from "./Pages/AdminDashboard";
 import Packages from "./Pages/Packages";
 import International from "./Pages/International";
 import Family from "./Pages/Family";
@@ -16,7 +15,7 @@ import MyBookings from "./Pages/MyBookings";
 import Customize from "./Pages/Customize";
 import TermsConditions from "./Pages/TermsConditions";
 import PrivacyPolicy from "./Pages/PrivacyPolicy";
-
+import AdminDashboard from "./Pages/Admin/AdminDashboard";
 
 function App() {
   return (
@@ -28,7 +27,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/packages" element={<Packages />} />
-        <Route   path="/international"   element={<International />} />
+        <Route path="/international"   element={<International />} />
         <Route path="/family" element={<Family />} />
         <Route path="/friends" element={<Friends />} />
         <Route path="/adventure" element={<Adventure />} />
@@ -36,10 +35,9 @@ function App() {
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/mybookings" element={<MyBookings />} />
         <Route path="/customize" element={<Customize />} />
-        <Route path="/admindashboard" element={<AdminDashboard />} />
         <Route path="/terms" element={<TermsConditions />} />
-<Route path="/privacy" element={<PrivacyPolicy />} />
-
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/admin" element={<AdminDashboard />} />
       </Routes>
     </BrowserRouter>
   );
