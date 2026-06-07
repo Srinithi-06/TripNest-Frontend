@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import {
-  Link,
-  useNavigate,
-} from "react-router-dom";import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import api from "../Services/api";
 
 function Signup() {
   const navigate = useNavigate();
@@ -18,14 +16,11 @@ const [loading, setLoading] = useState(false);
   setLoading(true);
 
   try {
-    await axios.post(
-      "https://tripnest-backend-3.onrender.com/api/users/signup",
-      {
-        fullname,
-        email,
-        password,
-      }
-    );
+    await api.post("/users/signup", {
+      fullname,
+      email,
+      password,
+    });
 
     alert("Account Created Successfully");
     navigate("/login");

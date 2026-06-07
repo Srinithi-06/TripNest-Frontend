@@ -1,89 +1,107 @@
 import React, { useEffect, useState } from "react";
+import api from "../../Services/api";
 
 function BookingRequests() {
   const [bookings, setBookings] = useState([]);
   const [search, setSearch] = useState("");
 
-  useEffect(() => {
-    loadBookings();
-  }, []);
+ useEffect(() => {
+  fetchBookings();
+}, []);
 
-  const loadBookings = () => {
-    const storedBookings =
-      JSON.parse(localStorage.getItem("bookings")) || [];
+const fetchBookings = async () => {
+  try {
+    const response =
+      await api.get("/bookings");
 
-    setBookings(storedBookings);
-  };
-
-  const approveBooking = (index) => {
-    const guideName =
-      prompt("Enter Guide Name");
-
-    if (!guideName) return;
-
-    const guidePhone =
-      prompt("Enter Guide Mobile");
-
-    if (!guidePhone) return;
-
-    const updatedBookings = [...bookings];
-
-    updatedBookings[index].status =
-      "Approved";
-
-    updatedBookings[index].guideName =
-      guideName;
-
-    updatedBookings[index].guidePhone =
-      guidePhone;
-
-    updatedBookings[index].reason = "";
-
-    localStorage.setItem(
-      "bookings",
-      JSON.stringify(updatedBookings)
+    console.log(
+      "Bookings Response:",
+      response.data
     );
 
-    setBookings(updatedBookings);
+    setBookings(response.data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+ const approveBooking = async (
+  index
+) => {
+  const guideName =
+    prompt("Enter Guide Name");
 
-    alert("Booking Approved");
-  };
+  if (!guideName) return;
 
-  const rejectBooking = (index) => {
-    const reason =
-      prompt("Enter Rejection Reason");
-
-    if (!reason) return;
-
-    const updatedBookings = [...bookings];
-
-    updatedBookings[index].status =
-      "Rejected";
-
-    updatedBookings[index].reason =
-      reason;
-
-    localStorage.setItem(
-      "bookings",
-      JSON.stringify(updatedBookings)
+  const guidePhone =
+    prompt(
+      "Enter Guide Mobile Number"
     );
 
-    setBookings(updatedBookings);
+  if (!guidePhone) return;
 
-    alert("Booking Rejected");
-  };
+  try {
+    await api.put(
+      `/bookings/approve/${bookings[index]._id}`,
+      {
+        guideName,
+        guidePhone,
+      }
+    );
+
+    fetchBookings();
+
+    alert(
+      "Booking Approved"
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+  const rejectBooking = async (
+  index
+) => {
+  const reason =
+    prompt(
+      "Enter Rejection Reason"
+    );
+
+  if (!reason) return;
+
+  try {
+    await api.put(
+      `/bookings/reject/${bookings[index]._id}`,
+      {
+        reason,
+      }
+    );
+
+    fetchBookings();
+
+    alert(
+      "Booking Rejected"
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   const filteredBookings =
-    bookings.filter(
-      (item) =>
-        item.name
-          ?.toLowerCase()
-          .includes(search.toLowerCase()) ||
-        item.customerName
-          ?.toLowerCase()
-          .includes(search.toLowerCase())
-    );
+  bookings.filter(
+    (item) =>
+      item.packageName
+        ?.toLowerCase()
+        .includes(
+          search.toLowerCase()
+        ) ||
+      item.userName
+        ?.toLowerCase()
+        .includes(
+          search.toLowerCase()
+        )
+  );
 
+  console.log(bookings);
+  
   return (
     <>
       <h1
@@ -166,7 +184,7 @@ function BookingRequests() {
       {filteredBookings.map(
         (booking, index) => (
           <div
-            key={index}
+            key={booking._id}
             style={{
               ...cardStyle,
 
@@ -188,7 +206,7 @@ function BookingRequests() {
                 alignItems: "center",
               }}
             >
-              <h2>{booking.name}</h2>
+             <h2>{booking.packageName}</h2>
 
               <span
                 style={{
@@ -201,8 +219,8 @@ function BookingRequests() {
                       ? "#dc3545"
                       : "#ffc107",
 
-                  color:
-                    booking.status ===
+                 color:
+  !booking.status===
                     "Pending"
                       ? "#000"
                       : "#fff",
@@ -223,18 +241,14 @@ function BookingRequests() {
               <strong>
                 Customer:
               </strong>{" "}
-              {
-                booking.customerName
-              }
+              {booking.userName}
             </p>
 
             <p>
               <strong>
                 Email:
               </strong>{" "}
-              {
-                booking.customerEmail
-              }
+             {booking.userEmail}
             </p>
 
             <p>

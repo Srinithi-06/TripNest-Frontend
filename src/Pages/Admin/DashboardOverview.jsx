@@ -262,7 +262,7 @@ const [selectedCategory, setSelectedCategory] =  useState("All");
     </div>
   ))}
 </div>
-      <div
+  { /*   <div
         style={{
           display: "grid",
           gridTemplateColumns:
@@ -323,7 +323,7 @@ const [selectedCategory, setSelectedCategory] =  useState("All");
             }
           </h2>
         </div>
-      </div>
+      </div>*/}
 
       {/* Available Packages */}
 

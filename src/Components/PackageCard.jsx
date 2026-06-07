@@ -1,4 +1,5 @@
 import React from "react";
+import api from "../Services/api";
 
 function PackageCard({
   image,
@@ -7,98 +8,139 @@ function PackageCard({
   description,
   price,
 }) {
-
-  const addToWishlist = () => {
+  const addToWishlist = async () => {
     const currentUser = JSON.parse(
       localStorage.getItem("currentUser")
     );
 
     if (!currentUser) {
-      alert("Please login to add packages to wishlist");
+      alert(
+        "Please login to add packages to wishlist"
+      );
       window.location.href = "/login";
       return;
     }
 
-    const wishlist =
-      JSON.parse(localStorage.getItem("wishlist")) || [];
+    try {
+      const response =
+        await api.get("/wishlist");
 
-   const exists = wishlist.find(
-  (item) =>
-    item.name === name &&
-    item.userEmail === currentUser.email
-);
+      const exists =
+        response.data.find(
+          (item) =>
+            item.packageName ===
+              name &&
+            item.userEmail ===
+              currentUser.email
+        );
 
-    if (exists) {
-      alert("Already in Wishlist");
-      return;
+      if (exists) {
+        alert(
+          "Already in Wishlist"
+        );
+        return;
+      }
+
+      await api.post(
+        "/wishlist/add",
+        {
+          packageName: name,
+          packageImage: image,
+          duration,
+          price,
+          userName:
+            currentUser.fullname,
+          userEmail:
+            currentUser.email,
+        }
+      );
+
+      alert(
+        "Added To Wishlist Successfully"
+      );
+    } catch (error) {
+      console.log(error);
+      alert(
+        "Failed To Add Wishlist"
+      );
     }
-
-    wishlist.push({
-  userEmail: currentUser.email,
-  image,
-  name,
-  duration,
-  description,
-  price,
-});
-    localStorage.setItem(
-      "wishlist",
-      JSON.stringify(wishlist)
-    );
-
-    alert("Added to Wishlist");
   };
 
-  const bookNow = () => {
+  const bookNow = async () => {
     const currentUser = JSON.parse(
       localStorage.getItem("currentUser")
     );
 
     if (!currentUser) {
-      alert("Please login to book a package");
+      alert(
+        "Please login to book a package"
+      );
       window.location.href = "/login";
       return;
     }
 
-    const bookings =
-      JSON.parse(localStorage.getItem("bookings")) || [];
+    try {
+      const response =
+        await api.get("/bookings");
 
-      bookings.push({
-  userEmail: currentUser.email,
-  customerName: currentUser.fullname,
-  customerEmail: currentUser.email,
-  image,
-  name,
-  duration,
-  description,
-  price,
-  status: "Pending",
-  guideName: "",
-  guidePhone: "",
-  reason: "",
-});
+      const exists =
+        response.data.find(
+          (item) =>
+            item.packageName ===
+              name &&
+            item.userEmail ===
+              currentUser.email
+        );
 
+      if (exists) {
+        alert(
+          "Package Already Booked"
+        );
+        return;
+      }
 
-    localStorage.setItem(
-      "bookings",
-      JSON.stringify(bookings)
-    );
+      await api.post(
+        "/bookings/create",
+        {
+          packageName: name,
+          packageImage: image,
+          duration,
+          price,
+          userName:
+            currentUser.fullname,
+          userEmail:
+            currentUser.email,
+          status: "Pending",
+          guideName: "",
+          guidePhone: "",
+          reason: "",
+        }
+      );
 
-    alert("Booking Request Sent");
+      alert(
+        "Booking Request Sent Successfully"
+      );
+    } catch (error) {
+      console.log(error);
+      alert(
+        "Booking Failed"
+      );
+    }
   };
 
   return (
     <div
-    style={{
-  background:
-    "linear-gradient(145deg,#111,#181818)",
-  borderRadius: "25px",
-  overflow: "hidden",
-  border: "1px solid rgba(244,180,0,0.15)",
-  boxShadow:
-    "0 10px 30px rgba(0,0,0,0.4)",
-  transition: "0.4s",
-}}
+      style={{
+        background:
+          "linear-gradient(145deg,#111,#181818)",
+        borderRadius: "25px",
+        overflow: "hidden",
+        border:
+          "1px solid rgba(244,180,0,0.15)",
+        boxShadow:
+          "0 10px 30px rgba(0,0,0,0.4)",
+        transition: "0.4s",
+      }}
     >
       <img
         src={image}
@@ -110,8 +152,16 @@ function PackageCard({
         }}
       />
 
-      <div style={{ padding: "20px" }}>
-        <h3 style={{ color: "#f4b400" }}>
+      <div
+        style={{
+          padding: "20px",
+        }}
+      >
+        <h3
+          style={{
+            color: "#f4b400",
+          }}
+        >
           {name}
         </h3>
 
@@ -119,7 +169,11 @@ function PackageCard({
 
         <p>{description}</p>
 
-        <h4 style={{ color: "#f4b400" }}>
+        <h4
+          style={{
+            color: "#f4b400",
+          }}
+        >
           {price}
         </h4>
 
@@ -151,7 +205,8 @@ function PackageCard({
               flex: 1,
               background: "transparent",
               color: "#f4b400",
-              border: "1px solid #f4b400",
+              border:
+                "1px solid #f4b400",
               padding: "12px",
               borderRadius: "10px",
               cursor: "pointer",

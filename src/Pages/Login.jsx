@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
-import {  Link, useNavigate,} from "react-router-dom";
-import axios from "axios";
-
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import api from "../Services/api";
 
 function Login() {
   const navigate = useNavigate();
@@ -9,18 +8,6 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    const currentUser = localStorage.getItem("currentUser");
-    const adminUser = localStorage.getItem("adminUser");
-
-    if (currentUser) {
-      navigate("/dashboard");
-    }
-
-    if (adminUser) {
-      navigate("/admin");
-    }
-  }, [navigate]);
 
 const handleLogin = async (e) => {
   e.preventDefault();
@@ -46,13 +33,10 @@ const handleLogin = async (e) => {
       return;
     }
 
-    const response = await axios.post(
-      "https://tripnest-backend-3.onrender.com/api/users/login",
-      {
-        email,
-        password,
-      }
-    );
+    const response = await api.post("/users/login", {
+      email,
+      password,
+    });
 
     localStorage.setItem(
       "token",

@@ -1,4 +1,9 @@
-import React from "react";
+import React, {
+  useEffect,
+  useState,
+} from "react";
+
+import api from "../Services/api";
 import CategoryNavbar from "../Components/CategoryNavbar";
 import PackageCard from "../Components/PackageCard";
 
@@ -34,13 +39,30 @@ description:
 "Scuba diving and exciting water sports activities.",
 },
 ];
-const savedPackages =
-  JSON.parse(localStorage.getItem("packages")) || [];
+const [adventurePackages,
+  setAdventurePackages] =
+  useState([]);
 
-const adventurePackages =
-  savedPackages.filter(
-    (item) => item.category === "Adventure"
-  );
+useEffect(() => {
+  fetchPackages();
+}, []);
+
+const fetchPackages =
+  async () => {
+    try {
+      const response =
+        await api.get(
+          "/packages/category/Adventure"
+        );
+
+      setAdventurePackages(
+        response.data
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
 return (
 <div
 style={{
@@ -177,9 +199,9 @@ color: "white",
 
   {/* Admin Added Adventure Packages */}
 
-  {adventurePackages.map((tour, index) => (
+  {adventurePackages.map((tour) => (
     <PackageCard
-      key={`adventure-${index}`}
+      key={tour._id}
       image={tour.image}
       name={tour.name}
       duration={tour.duration}

@@ -1,4 +1,6 @@
-import React from "react";
+import React, {useEffect,useState,} from "react";
+
+import api from "../Services/api";
 import CategoryNavbar from "../Components/CategoryNavbar";
 import PackageCard from "../Components/PackageCard";
 
@@ -61,14 +63,29 @@ description:
 "Modern attractions and stunning city views.",
 },
 ];
-const savedPackages =
-  JSON.parse(localStorage.getItem("packages")) || [];
+const [internationalPackages,
+  setInternationalPackages] =
+  useState([]);
 
-const internationalPackages =
-  savedPackages.filter(
-    (item) => item.category === "International"
-  );
+useEffect(() => {
+  fetchPackages();
+}, []);
 
+const fetchPackages =
+  async () => {
+    try {
+      const response =
+        await api.get(
+          "/packages/category/International"
+        );
+
+      setInternationalPackages(
+        response.data
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 return (
 <div
 style={{
@@ -227,9 +244,9 @@ color: "white",
 
   {/* Admin Added International Packages */}
 
-  {internationalPackages.map((tour, index) => (
+  {internationalPackages.map((tour) => (
     <PackageCard
-      key={`international-${index}`}
+      key={tour}
       image={tour.image}
       name={tour.name}
       duration={tour.duration}

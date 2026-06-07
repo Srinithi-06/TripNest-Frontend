@@ -1,4 +1,9 @@
-import React from "react";
+import React, {
+  useEffect,
+  useState,
+} from "react";
+
+import api from "../Services/api";
 import CategoryNavbar from "../Components/CategoryNavbar";
 import PackageCard from "../Components/PackageCard";
 
@@ -55,14 +60,30 @@ price: "₹22,000",
 description: "River rafting and adventure activities.",
 },
 ];
-const savedPackages =
-  JSON.parse(localStorage.getItem("packages")) || [];
 
-const friendsPackages =
-  savedPackages.filter(
-    (item) => item.category === "Friends"
-  );
+const [friendsPackages,
+  setFriendsPackages] =
+  useState([]);
 
+useEffect(() => {
+  fetchPackages();
+}, []);
+
+const fetchPackages =
+  async () => {
+    try {
+      const response =
+        await api.get(
+          "/packages/category/Friends"
+        );
+
+      setFriendsPackages(
+        response.data
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 return (
 <div
 style={{
@@ -199,9 +220,9 @@ color: "white",
 
   {/* Admin Added Friends Packages */}
 
-  {friendsPackages.map((tour, index) => (
+  {friendsPackages.map((tour) => (
     <PackageCard
-      key={`friends-${index}`}
+      key={tour._id}
       image={tour.image}
       name={tour.name}
       duration={tour.duration}

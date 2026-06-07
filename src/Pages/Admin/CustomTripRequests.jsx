@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import api from "../../Services/api";
 
 function CustomTripRequests() {
 const [customTrips, setCustomTrips] =
@@ -8,103 +9,107 @@ const [search, setSearch] =
 useState("");
 
 useEffect(() => {
-loadTrips();
+  fetchTrips();
 }, []);
 
-const loadTrips = () => {
-const storedTrips =
-JSON.parse(
-localStorage.getItem(
-"customTripRequests"
-)
-) || [];
+const fetchTrips = async () => {
+  try {
+    const response =
+      await api.get(
+        "/customtrips"
+      );
 
+    console.log(
+      "Trips:",
+      response.data
+    );
 
-setCustomTrips(storedTrips);
-
-
+    setCustomTrips(
+      response.data
+    );
+  } catch (error) {
+    console.log(error);
+  }
 };
 
-const approveTrip = (index) => {
-const guideName = prompt(
-"Enter Guide Name"
-);
+const approveTrip = async (
+  index
+) => {
+  const guideName = prompt(
+    "Enter Guide Name"
+  );
 
+  if (!guideName) return;
 
-if (!guideName) return;
+  const guidePhone = prompt(
+    "Enter Guide Mobile Number"
+  );
 
-const guidePhone = prompt(
-  "Enter Guide Mobile Number"
-);
+  if (!guidePhone) return;
 
-if (!guidePhone) return;
+  try {
+    await api.put(
+      `/customtrips/approve/${customTrips[index]._id}`,
+      {
+        guideName,
+        guidePhone,
+      }
+    );
 
-const updatedTrips = [
-  ...customTrips,
-];
+    fetchTrips();
 
-updatedTrips[index].status =
-  "Approved";
-
-updatedTrips[index].guideName =
-  guideName;
-
-updatedTrips[index].guidePhone =
-  guidePhone;
-
-updatedTrips[index].message =
-  "You can contact the guide directly for further queries.";
-
-localStorage.setItem(
-  "customTripRequests",
-  JSON.stringify(updatedTrips)
-);
-
-setCustomTrips(updatedTrips);
-
-alert("Trip Approved");
-
-
+    alert(
+      "Trip Approved"
+    );
+  } catch (error) {
+    console.log(error);
+  }
 };
 
-const rejectTrip = (index) => {
-const reason = prompt(
-"Enter Rejection Reason"
-);
+const rejectTrip = async (
+  index
+) => {
+  const reason = prompt(
+    "Enter Rejection Reason"
+  );
 
+  if (!reason) return;
 
-if (!reason) return;
+  try {
+    await api.put(
+      `/customtrips/reject/${customTrips[index]._id}`,
+      {
+        reason,
+      }
+    );
 
-const updatedTrips = [
-  ...customTrips,
-];
+    fetchTrips();
 
-updatedTrips[index].status =
-  "Rejected";
-
-updatedTrips[index].message =
-  reason;
-
-localStorage.setItem(
-  "customTripRequests",
-  JSON.stringify(updatedTrips)
-);
-
-setCustomTrips(updatedTrips);
-
-alert("Trip Rejected");
-
-
+    alert(
+      "Trip Rejected"
+    );
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const filteredTrips =
-customTrips.filter(
-(trip) =>
-trip.destination
-?.toLowerCase()
-.includes(
-search.toLowerCase()
-)
+  customTrips.filter((trip) =>
+    (trip.destination || "")
+      .toLowerCase()
+      .includes(
+        search.toLowerCase()
+      )
+  );
+
+console.log(customTrips);
+
+console.log("Custom Trips State:", customTrips);
+
+
+console.log(
+  "Filtered Trips:",
+  filteredTrips
 );
 
 return (
@@ -165,6 +170,7 @@ Custom Trip Requests </h1>
         {
           customTrips.filter(
             (trip) =>
+              trip.status === "Pending" ||
               !trip.status
           ).length
         }
@@ -187,7 +193,7 @@ Custom Trip Requests </h1>
   {filteredTrips.map(
     (trip, index) => (
       <div
-        key={index}
+        key={trip._id}
         style={{
           ...cardStyle,
 
@@ -247,14 +253,14 @@ Custom Trip Requests </h1>
           <strong>
             User Name:
           </strong>{" "}
-          {trip.userName}
+         {trip.userName || "Not Available"}
         </p>
 
         <p>
           <strong>
             User Email:
           </strong>{" "}
-          {trip.userEmail}
+          {trip.userEmail || "Not Available"}
         </p>
 
         <p>
@@ -277,18 +283,14 @@ Custom Trip Requests </h1>
           <strong>
             Travel Date:
           </strong>{" "}
-          {
-            trip.travelDate
-          }
+          {trip.travelDate || "Not Specified"}
         </p>
 
         <p>
           <strong>
             Special Requests:
           </strong>{" "}
-          {
-            trip.requests
-          }
+          {trip.requests || "No Requests"}
         </p>
 
         {trip.guideName && (
@@ -335,7 +337,7 @@ Custom Trip Requests </h1>
           </p>
         )}
 
-        {!trip.status && (
+        {(trip.status === "Pending" || !trip.status) && (
           <>
             <button
               style={

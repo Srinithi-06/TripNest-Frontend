@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import api from "../../Services/api"
 function PackageManagement() {
   const [packages, setPackages] = useState([]);
 
@@ -16,40 +16,50 @@ function PackageManagement() {
       image: "",
     });
 
-  useEffect(() => {
-    const storedPackages =
-      JSON.parse(localStorage.getItem("packages")) || [];
+useEffect(() => {
+  fetchPackages();
+}, []);
 
-    setPackages(storedPackages);
-  }, []);
+const fetchPackages = async () => {
+  try {
+    const response =
+      await api.get("/packages");
 
-  const savePackage = () => {
-    if (
-      !newPackage.name ||
-      !newPackage.category ||
-      !newPackage.duration ||
-      !newPackage.price
-    ) {
-      alert("Fill all required fields");
-      return;
-    }
+    setPackages(response.data);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-    let updatedPackages = [...packages];
+const savePackage = async () => {
+  if (
+    !newPackage.name ||
+    !newPackage.category ||
+    !newPackage.duration ||
+    !newPackage.price
+  ) {
+    alert("Fill all required fields");
+    return;
+  }
 
+  try {
     if (editingIndex !== null) {
-      updatedPackages[editingIndex] = newPackage;
+      await api.put(
+        `/packages/${packages[editingIndex]._id}`,
+        newPackage
+      );
+
       alert("Package Updated");
     } else {
-      updatedPackages.push(newPackage);
+      await api.post(
+        "/packages/add",
+        newPackage
+      );
+
       alert("Package Added");
     }
 
-    setPackages(updatedPackages);
-
-    localStorage.setItem(
-      "packages",
-      JSON.stringify(updatedPackages)
-    );
+    fetchPackages();
 
     setNewPackage({
       name: "",
@@ -61,28 +71,40 @@ function PackageManagement() {
     });
 
     setEditingIndex(null);
-  };
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   const editPackage = (index) => {
     setNewPackage(packages[index]);
     setEditingIndex(index);
   };
 
-  const deletePackage = (index) => {
-    if (!window.confirm("Delete Package?"))
-      return;
+  const deletePackage = async (
+  index
+) => {
+  if (
+    !window.confirm(
+      "Delete Package?"
+    )
+  )
+    return;
 
-    const updatedPackages = [...packages];
-
-    updatedPackages.splice(index, 1);
-
-    setPackages(updatedPackages);
-
-    localStorage.setItem(
-      "packages",
-      JSON.stringify(updatedPackages)
+  try {
+    await api.delete(
+      `/packages/${packages[index]._id}`
     );
-  };
+
+    fetchPackages();
+
+    alert(
+      "Package Deleted Successfully"
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   return (
     <>

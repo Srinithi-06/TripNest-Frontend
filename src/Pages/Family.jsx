@@ -1,4 +1,9 @@
-import React from "react";
+import React, {
+  useEffect,
+  useState,
+} from "react";
+
+import api from "../Services/api";
 import CategoryNavbar from "../Components/CategoryNavbar";
 import PackageCard from "../Components/PackageCard";
 
@@ -62,13 +67,29 @@ function Family() {
     },
   ];
 
-  const savedPackages =
-    JSON.parse(localStorage.getItem("packages")) || [];
+const [familyPackages,
+  setFamilyPackages] =
+  useState([]);
 
-  const familyPackages =
-    savedPackages.filter(
-      (item) => item.category === "Family"
-    );
+useEffect(() => {
+  fetchPackages();
+}, []);
+
+const fetchPackages =
+  async () => {
+    try {
+      const response =
+        await api.get(
+          "/packages/category/Family"
+        );
+
+      setFamilyPackages(
+        response.data
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div
@@ -211,9 +232,9 @@ function Family() {
           ))}
 
           {familyPackages.map(
-            (tour, index) => (
+            (tour) => (
               <PackageCard
-                key={`family-${index}`}
+                key={tour._id}
                 image={tour.image}
                 name={tour.name}
                 duration={tour.duration}

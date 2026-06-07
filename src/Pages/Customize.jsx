@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import CategoryNavbar from "../Components/CategoryNavbar";
+
+import api from "../Services/api";
 function Customize() {
 const navigate = useNavigate();
 
@@ -32,35 +34,50 @@ setFormData({
 });
 };
 
-const submitRequest = (e) => {
-e.preventDefault();
+const submitRequest = async (e) => {
+  e.preventDefault();
 
+  try {
+    const currentUser =
+      JSON.parse(
+        localStorage.getItem(
+          "currentUser"
+        )
+      );
 
-const existingRequests =
-  JSON.parse(
-    localStorage.getItem("customTripRequests")
-  ) || [];
+    await api.post(
+      "/customtrips/create",
+      {
+        ...formData,
+        userName:
+          currentUser?.fullname,
+        userEmail:
+          currentUser?.email,
+        status: "Pending",
+        guideName: "",
+        guidePhone: "",
+        message: "",
+      }
+    );
 
-existingRequests.push(formData);
+    alert(
+      "Your custom trip request has been submitted successfully."
+    );
 
-localStorage.setItem(
-  "customTripRequests",
-  JSON.stringify(existingRequests)
-);
+    setFormData({
+      destination: "",
+      travelers: "",
+      budget: "",
+      travelDate: "",
+      requests: "",
+    });
+  } catch (error) {
+    console.log(error);
 
-alert(
-  "Your custom trip request has been submitted successfully."
-);
-
-setFormData({
-  destination: "",
-  travelers: "",
-  budget: "",
-  travelDate: "",
-  requests: "",
-});
-
-
+    alert(
+      "Failed to submit request"
+    );
+  }
 };
 
 

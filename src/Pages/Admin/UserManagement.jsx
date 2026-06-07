@@ -1,32 +1,62 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useState,
+} from "react";
+
+import api from "../../Services/api";
 
 function UserManagement() {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] =
+    useState([]);
 
   useEffect(() => {
-    const storedUsers =
-      JSON.parse(
-        localStorage.getItem("tripnestUsers")
-      ) || [];
-
-    setUsers(storedUsers);
+    fetchUsers();
   }, []);
 
-  const deleteUser = (index) => {
-    if (!window.confirm("Delete User?"))
-      return;
+  const fetchUsers =
+    async () => {
+      try {
+        const response =
+          await api.get(
+            "/users"
+          );
 
-    const updatedUsers = [...users];
+        console.log(
+          "Users:",
+          response.data
+        );
 
-    updatedUsers.splice(index, 1);
+        setUsers(
+          response.data
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-    setUsers(updatedUsers);
+  const deleteUser =
+    async (id) => {
+      if (
+        !window.confirm(
+          "Delete User?"
+        )
+      )
+        return;
 
-    localStorage.setItem(
-      "tripnestUsers",
-      JSON.stringify(updatedUsers)
-    );
-  };
+      try {
+        await api.delete(
+          `/users/${id}`
+        );
+
+        fetchUsers();
+
+        alert(
+          "User Deleted Successfully"
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
   return (
     <>
@@ -49,13 +79,15 @@ function UserManagement() {
         }}
       >
         <h2>
-          Total Users: {users.length}
+          Total Users:
+          {" "}
+          {users.length}
         </h2>
       </div>
 
-      {users.map((user, index) => (
+      {users.map((user) => (
         <div
-          key={index}
+          key={user._id}
           style={{
             background: "#111",
             padding: "20px",
@@ -63,21 +95,31 @@ function UserManagement() {
             marginBottom: "15px",
           }}
         >
-          <h3>{user.fullname}</h3>
+          <h3>
+            {user.fullname}
+          </h3>
 
-          <p>{user.email}</p>
+          <p>
+            {user.email}
+          </p>
 
           <button
             style={{
-              background: "#dc3545",
+              background:
+                "#dc3545",
               color: "white",
               border: "none",
-              padding: "10px 20px",
-              borderRadius: "8px",
-              cursor: "pointer",
+              padding:
+                "10px 20px",
+              borderRadius:
+                "8px",
+              cursor:
+                "pointer",
             }}
             onClick={() =>
-              deleteUser(index)
+              deleteUser(
+                user._id
+              )
             }
           >
             Delete User
