@@ -8,6 +8,7 @@ function Wishlist() {
 
   const [wishlist, setWishlist] = useState([]);
   const [bookings, setBookings] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadWishlist = async () => {
@@ -19,6 +20,7 @@ function Wishlist() {
         if (!currentUser) {
           alert("Please Login First");
           navigate("/login");
+          setIsLoading(false);
           return;
         }
 
@@ -45,8 +47,10 @@ function Wishlist() {
           );
 
         setBookings(userBookings);
+        setIsLoading(false);
       } catch (error) {
         console.log(error);
+        setIsLoading(false);
       }
     };
 
@@ -180,6 +184,10 @@ function Wishlist() {
         packageName
     );
   };
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <div

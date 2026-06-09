@@ -7,6 +7,7 @@ function MyBookings() {
   const navigate = useNavigate();
   const [bookings, setBookings] = useState([]);
   const [customTrips, setCustomTrips] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadBookings = async () => {
@@ -15,6 +16,7 @@ function MyBookings() {
       if (!currentUser) {
         alert("Please Login First");
         navigate("/login");
+        setIsLoading(false);
         return;
       }
 
@@ -25,8 +27,10 @@ function MyBookings() {
         );
         setBookings(userBookings);
         await fetchCustomTrips(currentUser.email);
+        setIsLoading(false);
       } catch (error) {
         console.log(error);
+        setIsLoading(false);
       }
     };
 
@@ -61,6 +65,10 @@ function MyBookings() {
   };
 
   const noData = bookings.length === 0 && customTrips.length === 0;
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <div

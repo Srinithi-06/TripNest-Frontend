@@ -1,8 +1,26 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../Assets/Images/tripnest logo.png";
 
 function Navbar() {
+  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const currentUser = JSON.parse(
+      localStorage.getItem("currentUser")
+    );
+    setIsLoggedIn(!!currentUser);
+  }, []);
+
+  const logout = () => {
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("adminUser");
+    alert("Logged Out Successfully");
+    setIsLoggedIn(false);
+    navigate("/");
+  };
+
   return (
     <nav
       style={{
@@ -78,16 +96,22 @@ function Navbar() {
           Contact
         </a>
 
-        <Link
-          to="/login"
-          style={{
-            textDecoration: "none",
-          }}
-        >
-          <button style={loginBtn}>
-            Login
+        {isLoggedIn ? (
+          <button onClick={logout} style={logoutBtn}>
+            Logout
           </button>
-        </Link>
+        ) : (
+          <Link
+            to="/login"
+            style={{
+              textDecoration: "none",
+            }}
+          >
+            <button style={loginBtn}>
+              Login
+            </button>
+          </Link>
+        )}
       </div>
     </nav>
   );
@@ -115,6 +139,20 @@ const loginBtn = {
   fontSize: "17px",
   boxShadow:
     "0 0 15px rgba(244,180,0,0.4)",
+  transition: "0.3s",
+};
+
+const logoutBtn = {
+  background: "#dc3545",
+  color: "#fff",
+  border: "none",
+  padding: "13px 32px",
+  borderRadius: "40px",
+  cursor: "pointer",
+  fontWeight: "700",
+  fontSize: "17px",
+  boxShadow:
+    "0 0 15px rgba(220,53,69,0.4)",
   transition: "0.3s",
 };
 

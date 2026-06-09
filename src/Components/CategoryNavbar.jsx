@@ -1,18 +1,27 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   NavLink,
   useNavigate,
+  Link,
 } from "react-router-dom";
 
 function CategoryNavbar() {
   const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const currentUser = JSON.parse(
+      localStorage.getItem("currentUser")
+    );
+    setIsLoggedIn(!!currentUser);
+  }, []);
 
   const logout = () => {
     localStorage.removeItem("currentUser");
     localStorage.removeItem("adminUser");
 
     alert("Logged Out Successfully");
-
+    setIsLoggedIn(false);
     navigate("/");
   };
 
@@ -108,12 +117,20 @@ function CategoryNavbar() {
           My Bookings
         </NavLink>
 
-        <button
-          onClick={logout}
-          style={logoutBtn}
-        >
-          Logout
-        </button>
+        {isLoggedIn ? (
+          <button
+            onClick={logout}
+            style={logoutBtn}
+          >
+            Logout
+          </button>
+        ) : (
+          <Link to="/login">
+            <button style={loginBtn}>
+              Login
+            </button>
+          </Link>
+        )}
       </div>
     </nav>
   );
@@ -148,6 +165,17 @@ const logoutBtn = {
   borderRadius: "10px",
   cursor: "pointer",
   fontWeight: "600",
+};
+
+const loginBtn = {
+  background: "linear-gradient(135deg,#f4b400,#ffcc00)",
+  color: "#000",
+  border: "none",
+  padding: "12px 22px",
+  borderRadius: "10px",
+  cursor: "pointer",
+  fontWeight: "600",
+  boxShadow: "0 0 15px rgba(244,180,0,0.4)",
   transition: "0.3s",
 };
 

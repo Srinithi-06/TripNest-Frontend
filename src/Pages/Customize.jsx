@@ -13,6 +13,7 @@ budget: "",
 travelDate: "",
 requests: "",
 });
+const [isLoading, setIsLoading] = useState(true);
 
 useEffect(() => {
 const currentUser = JSON.parse(
@@ -23,7 +24,11 @@ localStorage.getItem("currentUser")
 if (!currentUser) {
   alert("Please Login First");
   navigate("/login");
+  setIsLoading(false);
+  return;
 }
+
+setIsLoading(false);
 
 }, [navigate]);
 
@@ -80,6 +85,9 @@ const submitRequest = async (e) => {
   }
 };
 
+if (isLoading) {
+return null;
+}
 
 return (
 <div

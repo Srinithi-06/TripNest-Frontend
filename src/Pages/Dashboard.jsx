@@ -14,6 +14,7 @@ const navigate = useNavigate();
 
 const [currentUser, setCurrentUser] =
 useState(null);
+const [isLoading, setIsLoading] = useState(true);
 
 useEffect(() => {
 const user = JSON.parse(
@@ -24,10 +25,12 @@ localStorage.getItem("currentUser")
 if (!user) {
   alert("Please Login First");
   navigate("/login");
+  setIsLoading(false);
   return;
 }
 
 setCurrentUser(user);
+setIsLoading(false);
 
 }, [navigate]);
 
@@ -74,7 +77,7 @@ price: "₹95,000",
 },
 ];
 
-if (!currentUser) {
+if (isLoading || !currentUser) {
 return null;
 }
 
