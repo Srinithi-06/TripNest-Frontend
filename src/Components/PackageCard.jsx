@@ -40,21 +40,16 @@ function PackageCard({
         );
         return;
       }
-
-      await api.post(
-        "/wishlist/add",
-        {
-          packageName: name,
-          packageImage: image,
-          duration,
-          price,
-          userName:
-            currentUser.fullname,
-          userEmail:
-            currentUser.email,
-        }
-      );
-
+await api.post("/wishlist/add", {
+  packageName: name,
+  packageImage: image,
+  duration,
+  price,
+  userName:
+    `${currentUser.firstName} ${currentUser.lastName}`,
+  userEmail:
+    currentUser.email,
+});
       alert(
         "Added To Wishlist Successfully"
       );
@@ -99,23 +94,20 @@ function PackageCard({
         return;
       }
 
-      await api.post(
-        "/bookings/create",
-        {
-          packageName: name,
-          packageImage: image,
-          duration,
-          price,
-          userName:
-            currentUser.fullname,
-          userEmail:
-            currentUser.email,
-          status: "Pending",
-          guideName: "",
-          guidePhone: "",
-          reason: "",
-        }
-      );
+      await api.post("/bookings/create", {
+  packageName: name,
+  packageImage: image,
+  duration,
+  price,
+  userName:
+    `${currentUser.firstName} ${currentUser.lastName}`,
+  userEmail:
+    currentUser.email,
+  status: "Pending",
+  guideName: "",
+  guidePhone: "",
+  reason: "",
+});
 
       alert(
         "Booking Request Sent Successfully"
