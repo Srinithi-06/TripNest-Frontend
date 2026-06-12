@@ -54,10 +54,9 @@ const submitRequest = async (e) => {
       "/customtrips/create",
       {
         ...formData,
-        userName:
-          currentUser?.fullname,
-        userEmail:
-          currentUser?.email,
+        firstName: currentUser.firstName,
+lastName: currentUser.lastName,
+userEmail: currentUser.email,
         status: "Pending",
         guideName: "",
         guidePhone: "",
@@ -88,6 +87,13 @@ const submitRequest = async (e) => {
 if (isLoading) {
 return null;
 }
+console.log(
+  JSON.parse(
+    localStorage.getItem(
+      "currentUser"
+    )
+  )
+);
 
 return (
 <div
